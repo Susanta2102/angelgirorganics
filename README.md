@@ -232,13 +232,6 @@ Copyright © 2025 Angel Organics. All rights reserved.
 - **Bootstrap** - For responsive design
 - **Font Awesome** - For beautiful icons
 
----
-
-## 📞 Support
-
-For technical support or business inquiries:
-- **WhatsApp**: +91 8811013758
-- **Email**: angelgirorganics@gmail.com
 
 ---
 
