@@ -1,0 +1,223 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[margin=0.3in]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{textpos}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{wrapfig}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+
+% Set up Hindi language support
+\setdefaultlanguage{hindi}
+\setotherlanguage{english}
+\newfontfamily\hindifont[Script=Devanagari]{Noto Sans Devanagari}
+\newfontfamily\englishfont{Arial}
+
+% Define colors
+\definecolor{primarygreen}{RGB}{46,139,87}
+\definecolor{goldyellow}{RGB}{255,193,7}
+\definecolor{cream}{RGB}{255,248,235}
+\definecolor{darkgreen}{RGB}{34,104,65}
+\definecolor{lightgreen}{RGB}{144,238,144}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+\begin{document}
+
+% Background
+\tikz[remember picture,overlay] {
+    \fill[cream] (current page.south west) rectangle (current page.north east);
+    % Decorative elements
+    \fill[primarygreen!8] ([shift={(-2cm,2cm)}]current page.north west) circle (3cm);
+    \fill[goldyellow!12] ([shift={(2cm,-2cm)}]current page.south east) circle (2.5cm);
+}
+
+% Header
+\begin{tcolorbox}[colback=primarygreen, coltext=white, arc=8pt, boxrule=0pt, height=2.2cm, valign=center]
+    \begin{center}
+        \textbf{\fontsize{28}{32}\selectfont एंजल ऑर्गेनिक्स}\\
+        \fontsize{14}{16}\selectfont प्रीमियम गिर गाय डेयरी फार्म\\
+        \textit{\fontsize{12}{14}\selectfont "जहाँ प्रेम मिलता है शुद्धता से"}
+    \end{center}
+\end{tcolorbox}
+
+\vspace{0.2cm}
+
+% Main content area with three columns
+\begin{minipage}[t]{0.32\textwidth}
+    
+    % Cow photo and introduction
+    \begin{tcolorbox}[colback=white, colframe=primarygreen, arc=6pt, boxrule=1.5pt, left=5pt, right=5pt, top=5pt, bottom=5pt]
+        \includegraphics[width=\textwidth, height=3.5cm, keepaspectratio]{1.jpg}
+        
+        \vspace{0.1cm}
+        \textbf{\small हमारी प्रिय गिर गायें}\\
+        {\tiny राजस्थान में पारंपरिक देखभाल के साथ पाली गई गायों से प्राकृतिक A2 दूध का अनुभव करें।}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Why Choose Us
+    \begin{tcolorbox}[colback=lightgreen!20, colframe=primarygreen, arc=6pt, boxrule=1pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small एंजल ऑर्गेनिक्स क्यों चुनें?}
+        
+        \vspace{0.1cm}
+        {\tiny
+        ✓ 100\% शुद्ध A2 प्रोटीन\\
+        ✓ रसायन मुक्त गारंटी\\
+        ✓ पारंपरिक तरीके\\
+        ✓ विशेषज्ञ फार्म प्रबंधन\\
+        ✓ रोज ताजा डिलीवरी\\
+        ✓ आसानी से पचने वाला\\
+        ✓ 20+ प्रीमियम गिर गायें\\
+        ✓ 100+ लीटर दैनिक उत्पादन}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Health Benefits
+    \begin{tcolorbox}[colback=goldyellow!15, colframe=goldyellow, arc=6pt, boxrule=1pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small स्वास्थ्य लाभ}
+        
+        \vspace{0.1cm}
+        {\tiny
+        🧠 मानसिक विकास\\
+        🛡️ रोग प्रतिरोधक क्षमता\\
+        💪 मांसपेशियों का विकास\\
+        🦴 हड्डियों को मजबूती\\
+        ❤️ हृदय स्वास्थ्य\\
+        😊 आसान पाचन}
+    \end{tcolorbox}
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.35\textwidth}
+    
+    % Product showcase
+    \begin{tcolorbox}[colback=white, colframe=primarygreen, arc=6pt, boxrule=1.5pt, left=5pt, right=5pt, top=5pt, bottom=5pt]
+        \textbf{\small हमारे प्रीमियम उत्पाद}
+        
+        \vspace{0.1cm}
+        % Product images
+        \begin{center}
+            \includegraphics[width=0.45\textwidth, height=2.2cm, keepaspectratio]{11.jpg}
+            \includegraphics[width=0.45\textwidth, height=2.2cm, keepaspectratio]{12.jpg}
+        \end{center}
+        
+        \vspace{0.1cm}
+        {\tiny
+        \textbf{ताजा गिर गाय A2 दूध} - ₹75/लीटर\\
+        \textbf{सुनहरा A2 घी} - ₹2500/किग्रा\\
+        \textbf{ताजा मक्खन} - ₹1200/किग्रा\\
+        \textbf{गाढ़ा दही} - ₹100/किग्रा\\
+        \textbf{प्रोबायोटिक छाछ} - ₹30/लीटर}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Features
+    \begin{tcolorbox}[colback=cream, colframe=darkgreen, arc=6pt, boxrule=1pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small हमारी विशेषताएं}
+        
+        \vspace{0.1cm}
+        {\tiny
+        🌿 \textbf{जैविक और प्राकृतिक:} हार्मोन और रसायन मुक्त\\
+        🏆 \textbf{शुद्ध गिर नस्ल:} मूल देशी नस्ल\\
+        👨‍🌾 \textbf{विशेषज्ञ देखभाल:} सुनील राय का 20+ साल अनुभव\\
+        🚛 \textbf{ताजा डिलीवरी:} फार्म से घर तक रोज\\
+        📍 \textbf{राजस्थानी परंपरा:} पारंपरिक कृषि पद्धति}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Customer testimonial
+    \begin{tcolorbox}[colback=primarygreen!10, colframe=primarygreen, arc=6pt, boxrule=1pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small ग्राहक समीक्षा}
+        
+        \vspace{0.1cm}
+        {\tiny \textit{"एंजल ऑर्गेनिक्स बेहतरीन गिर गाय का दूध देता है। स्वच्छता पर खास ध्यान। शुद्ध, मलाईदार दूध का स्वाद अद्भुत है!"}}
+        
+        \vspace{0.05cm}
+        {\tiny \textbf{- अलोक उत्तम, अजमेर}}
+    \end{tcolorbox}
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.28\textwidth}
+    
+    % QR Codes section
+    \begin{tcolorbox}[colback=white, colframe=primarygreen, arc=6pt, boxrule=2pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small हमारी वेबसाइट देखें}
+        
+        \vspace{0.1cm}
+        \begin{center}
+            \includegraphics[width=3cm]{website_qr.png}
+        \end{center}
+        
+        \vspace{0.1cm}
+        {\tiny पूर्ण उत्पाद विवरण और ऑनलाइन ऑर्डरिंग के लिए स्कैन करें}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    \begin{tcolorbox}[colback=white, colframe=goldyellow, arc=6pt, boxrule=2pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small इंस्टाग्राम पर फॉलो करें}
+        
+        \vspace{0.1cm}
+        \begin{center}
+            \includegraphics[width=3cm]{insta_qr.png}
+        \end{center}
+        
+        \vspace{0.1cm}
+        {\tiny @angelorganic\_ajmer}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Contact info
+    \begin{tcolorbox}[colback=primarygreen, coltext=white, arc=6pt, boxrule=0pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small संपर्क करें}
+        
+        \vspace{0.1cm}
+        {\small \textbf{📞 +91 8811013758}}
+        
+        \vspace{0.05cm}
+        {\tiny 
+        📱 व्हाट्सऐप ऑर्डर उपलब्ध\\
+        📧 drsunilkrai1975@gmail.com\\
+        📍 अजमेर, राजस्थान\\
+        🕒 रोज ताजा डिलीवरी}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Statistics
+    \begin{tcolorbox}[colback=goldyellow!20, colframe=goldyellow, arc=6pt, boxrule=1pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \begin{center}
+            \textbf{\small हमारी सफलता}
+            
+            \vspace{0.1cm}
+            {\small \textbf{20+}} {\tiny प्रीमियम गिर गायें}\\
+            {\small \textbf{100+}} {\tiny लीटर रोजाना}\\
+            {\small \textbf{60+}} {\tiny खुश परिवार}
+        \end{center}
+    \end{tcolorbox}
+
+\end{minipage}
+
+\vspace{0.2cm}
+
+% Footer banner
+\begin{tcolorbox}[colback=darkgreen, coltext=white, arc=6pt, boxrule=0pt, height=0.8cm, valign=center]
+    \begin{center}
+        \textbf{\small 🥛 ताजा A2 दूध • 🧈 पारंपरिक घी • 🥛 जैविक डेयरी • 🚛 अजमेर में रोज डिलीवरी • ☎️ कॉल करें +91 8811013758}
+    \end{center}
+\end{tcolorbox}
+
+\end{document}

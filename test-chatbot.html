@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Angel Organics Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="chatbot.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .test-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        #testResults {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🐄 Angel Organics Chatbot Test</h1>
+        
+        <div id="testResults">
+            <div class="status info">
+                <strong>⏳ Running tests...</strong>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="testBackend()">🔧 Test Backend Connection</button>
+            <button onclick="testChatbot()">💬 Test Chatbot UI</button>
+            <button onclick="openChatbot()">🤖 Open Chatbot</button>
+        </div>
+        
+        <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+            <strong>Instructions:</strong>
+            <ol>
+                <li>Make sure backend is running: <code>python chatbot-backend.py</code></li>
+                <li>Click "Test Backend Connection" to verify API</li>
+                <li>Click "Test Chatbot UI" to check frontend</li>
+                <li>Click "Open Chatbot" to use the bot</li>
+            </ol>
+        </div>
+    </div>
+
+    <script src="chatbot-frontend.js"></script>
+    <script>
+        const testResults = document.getElementById('testResults');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = `<strong>${message}</strong>`;
+            testResults.appendChild(div);
+        }
+        
+        async function testBackend() {
+            testResults.innerHTML = '';
+            addResult('🔍 Testing backend connection...');
+            
+            try {
+                // Test health endpoint
+                const healthResponse = await fetch('http://localhost:5000/api/health');
+                if (healthResponse.ok) {
+                    const data = await healthResponse.json();
+                    addResult(`✅ Backend is running: ${data.model}`, 'success');
+                    addResult(`Active sessions: ${data.active_sessions}`, 'info');
+                } else {
+                    addResult('❌ Backend returned error status', 'error');
+                }
+                
+                // Test chat endpoint
+                addResult('🧪 Testing chat endpoint...');
+                const chatResponse = await fetch('http://localhost:5000/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: 'Hello',
+                        session_id: 'test_' + Date.now()
+                    })
+                });
+                
+                if (chatResponse.ok) {
+                    const data = await chatResponse.json();
+                    addResult(`✅ Chat API working! Response length: ${data.response.length} chars`, 'success');
+                    addResult(`Sample: ${data.response.substring(0, 100)}...`, 'info');
+                } else {
+                    addResult('❌ Chat API returned error', 'error');
+                }
+                
+            } catch (error) {
+                addResult(`❌ Connection failed: ${error.message}`, 'error');
+                addResult('⚠️ Make sure backend is running on port 5000', 'error');
+            }
+        }
+        
+        function testChatbot() {
+            testResults.innerHTML = '';
+            addResult('🔍 Checking chatbot UI components...');
+            
+            const checks = [
+                { element: 'chatbotToggle', name: 'Toggle Button' },
+                { element: 'chatbotContainer', name: 'Chat Container' },
+                { element: 'chatbotMessages', name: 'Messages Area' },
+                { element: 'chatbotInput', name: 'Input Field' },
+                { element: 'chatbotSend', name: 'Send Button' }
+            ];
+            
+            let allFound = true;
+            checks.forEach(check => {
+                const element = document.getElementById(check.element);
+                if (element) {
+                    addResult(`✅ ${check.name} found`, 'success');
+                } else {
+                    addResult(`❌ ${check.name} not found`, 'error');
+                    allFound = false;
+                }
+            });
+            
+            if (allFound) {
+                addResult('🎉 All UI components loaded successfully!', 'success');
+            } else {
+                addResult('⚠️ Some components are missing. Check console for errors.', 'error');
+            }
+            
+            // Check if chatbot object exists
+            if (typeof angelChatbot !== 'undefined') {
+                addResult('✅ Chatbot JavaScript loaded', 'success');
+            } else {
+                addResult('❌ Chatbot JavaScript not loaded', 'error');
+            }
+        }
+        
+        function openChatbot() {
+            if (typeof angelChatbot !== 'undefined') {
+                angelChatbot.toggleChatbot();
+                addResult('✅ Chatbot opened! Look for it in bottom-right corner.', 'success');
+            } else {
+                addResult('❌ Chatbot not initialized yet', 'error');
+            }
+        }
+        
+        // Run initial test
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testChatbot();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

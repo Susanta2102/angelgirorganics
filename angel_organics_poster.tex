@@ -1,0 +1,216 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[margin=0.3in]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{textpos}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{wrapfig}
+\usepackage{lipsum}
+
+% Define colors
+\definecolor{primarygreen}{RGB}{46,139,87}
+\definecolor{goldyellow}{RGB}{255,193,7}
+\definecolor{cream}{RGB}{255,248,235}
+\definecolor{darkgreen}{RGB}{34,104,65}
+\definecolor{lightgreen}{RGB}{144,238,144}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+\begin{document}
+
+% Background
+\tikz[remember picture,overlay] {
+    \fill[cream] (current page.south west) rectangle (current page.north east);
+    % Decorative elements
+    \fill[primarygreen!8] ([shift={(-2cm,2cm)}]current page.north west) circle (3cm);
+    \fill[goldyellow!12] ([shift={(2cm,-2cm)}]current page.south east) circle (2.5cm);
+}
+
+% Header
+\begin{tcolorbox}[colback=primarygreen, coltext=white, arc=8pt, boxrule=0pt, height=2.2cm, valign=center]
+    \begin{center}
+        \textbf{\fontsize{28}{32}\selectfont ANGEL ORGANICS}\\
+        \fontsize{14}{16}\selectfont Premium Gir Cow Dairy Farm\\
+        \textit{\fontsize{12}{14}\selectfont "Where Love Meets Purity"}
+    \end{center}
+</tcolorbox}
+
+\vspace{0.2cm}
+
+% Main content area with three columns
+\begin{minipage}[t]{0.32\textwidth}
+    
+    % Cow photo and introduction
+    \begin{tcolorbox}[colback=white, colframe=primarygreen, arc=6pt, boxrule=1.5pt, left=5pt, right=5pt, top=5pt, bottom=5pt]
+        \includegraphics[width=\textwidth, height=3.5cm, keepaspectratio]{1.jpg}
+        
+        \vspace{0.1cm}
+        \textbf{\small Our Beloved Gir Cows}\\
+        {\tiny Experience authentic A2 milk from cows raised with traditional care in Rajasthan.}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Why Choose Us
+    \begin{tcolorbox}[colback=lightgreen!20, colframe=primarygreen, arc=6pt, boxrule=1pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small Why Choose Angel Organics?}
+        
+        \vspace{0.1cm}
+        {\tiny
+        ✓ 100\% Pure A2 Protein\\
+        ✓ Chemical-Free Promise\\
+        ✓ Traditional Methods\\
+        ✓ Expert Farm Management\\
+        ✓ Fresh Daily Delivery\\
+        ✓ Superior Digestibility\\
+        ✓ 20+ Premium Gir Cows\\
+        ✓ 100+ Liters Daily Production}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Health Benefits
+    \begin{tcolorbox}[colback=goldyellow!15, colframe=goldyellow, arc=6pt, boxrule=1pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small Health Benefits}
+        
+        \vspace{0.1cm}
+        {\tiny
+        🧠 Enhanced Brain Function\\
+        🛡️ Stronger Immunity\\
+        💪 Muscle Development\\
+        🦴 Better Bone Health\\
+        ❤️ Heart Health Support\\
+        😊 Easy Digestion}
+    \end{tcolorbox}
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.35\textwidth}
+    
+    % Product showcase
+    \begin{tcolorbox}[colback=white, colframe=primarygreen, arc=6pt, boxrule=1.5pt, left=5pt, right=5pt, top=5pt, bottom=5pt]
+        \textbf{\small Our Premium Products}
+        
+        \vspace{0.1cm}
+        % Product images
+        \begin{center}
+            \includegraphics[width=0.45\textwidth, height=2.2cm, keepaspectratio]{11.jpg}
+            \includegraphics[width=0.45\textwidth, height=2.2cm, keepaspectratio]{12.jpg}
+        \end{center}
+        
+        \vspace{0.1cm}
+        {\tiny
+        \textbf{Fresh Gir Cow A2 Milk} - ₹75/liter\\
+        \textbf{Golden A2 Ghee} - ₹2500/kg\\
+        \textbf{Fresh Butter} - ₹1200/kg\\
+        \textbf{Thick Curd} - ₹100/kg\\
+        \textbf{Probiotic Buttermilk} - ₹30/liter}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Features
+    \begin{tcolorbox}[colback=cream, colframe=darkgreen, arc=6pt, boxrule=1pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small What Makes Us Special}
+        
+        \vspace{0.1cm}
+        {\tiny
+        🌿 \textbf{Organic \& Natural:} Zero hormones or chemicals\\
+        🏆 \textbf{Pure Gir Genetics:} Authentic indigenous breed\\
+        👨‍🌾 \textbf{Expert Care:} Sunil Rai's 20+ years expertise\\
+        🚛 \textbf{Fresh Delivery:} Farm to family daily\\
+        📍 \textbf{Rajasthan Heritage:} Traditional farming methods}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Customer testimonial
+    \begin{tcolorbox}[colback=primarygreen!10, colframe=primarygreen, arc=6pt, boxrule=1pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small Customer Review}
+        
+        \vspace{0.1cm}
+        {\tiny \textit{"Angel Organics delivers outstanding Gir cow milk with commendable hygiene focus. Pure, creamy milk that tastes amazing!"}}
+        
+        \vspace{0.05cm}
+        {\tiny \textbf{- Alok Uttam, Ajmer}}
+    \end{tcolorbox}
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.28\textwidth}
+    
+    % QR Codes section
+    \begin{tcolorbox}[colback=white, colframe=primarygreen, arc=6pt, boxrule=2pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small Visit Our Website}
+        
+        \vspace{0.1cm}
+        \begin{center}
+            \includegraphics[width=3cm]{website_qr.png}
+        \end{center}
+        
+        \vspace{0.1cm}
+        {\tiny Scan for complete product details \& online ordering}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    \begin{tcolorbox}[colback=white, colframe=goldyellow, arc=6pt, boxrule=2pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small Follow Us on Instagram}
+        
+        \vspace{0.1cm}
+        \begin{center}
+            \includegraphics[width=3cm]{insta_qr.png}
+        \end{center}
+        
+        \vspace{0.1cm}
+        {\tiny @angelorganic\_ajmer}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Contact info
+    \begin{tcolorbox}[colback=primarygreen, coltext=white, arc=6pt, boxrule=0pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \textbf{\small Contact Us Now}
+        
+        \vspace{0.1cm}
+        {\small \textbf{📞 +91 8811013758}}
+        
+        \vspace{0.05cm}
+        {\tiny 
+        📱 WhatsApp Orders Available\\
+        📧 drsunilkrai1975@gmail.com\\
+        📍 Ajmer, Rajasthan\\
+        🕒 Fresh Daily Delivery}
+    \end{tcolorbox}
+    
+    \vspace{0.15cm}
+    
+    % Statistics
+    \begin{tcolorbox}[colback=goldyellow!20, colframe=goldyellow, arc=6pt, boxrule=1pt, left=4pt, right=4pt, top=4pt, bottom=4pt]
+        \begin{center}
+            \textbf{\small Our Success}
+            
+            \vspace{0.1cm}
+            {\small \textbf{20+}} {\tiny Premium Gir Cows}\\
+            {\small \textbf{100+}} {\tiny Liters Daily}\\
+            {\small \textbf{60+}} {\tiny Happy Families}
+        \end{center}
+    \end{tcolorbox}
+
+\end{minipage}
+
+\vspace{0.2cm}
+
+% Footer banner
+\begin{tcolorbox}[colback=darkgreen, coltext=white, arc=6pt, boxrule=0pt, height=0.8cm, valign=center]
+    \begin{center}
+        \textbf{\small 🥛 Fresh A2 Milk • 🧈 Traditional Ghee • 🥛 Organic Dairy • 🚛 Daily Delivery in Ajmer • ☎️ Call +91 8811013758}
+    \end{center}
+\end{tcolorbox}
+
+\end{document}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Counter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            display: block;
+            min-height: 80px;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            font-weight: 500;
+            opacity: 0.95;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .info {
+            color: white;
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .test-btn {
+            display: block;
+            margin: 2rem auto;
+            padding: 1rem 2rem;
+            background: white;
+            color: #28a745;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✅ Stats Counter Test</h1>
+        <p class="info">The numbers below should count up from 0 automatically!</p>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" data-count="20">0</div>
+                <div class="stat-label">Premium Gir Cows</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-count="100">0</div>
+                <div class="stat-label">Liters Daily Production</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-count="60">0</div>
+                <div class="stat-label">Happy Families</div>
+            </div>
+        </div>
+        
+        <button class="test-btn" onclick="resetAndAnimate()">▶️ Restart Animation</button>
+    </div>
+    
+    <script>
+        function startCounters() {
+            const counters = document.querySelectorAll('.stat-number[data-count]');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-count'));
+                const duration = 2000;
+                const step = target / (duration / 16);
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        counter.textContent = target + '+';
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current);
+                    }
+                }, 16);
+            });
+        }
+        
+        function resetAndAnimate() {
+            const counters = document.querySelectorAll('.stat-number[data-count]');
+            counters.forEach(counter => {
+                counter.textContent = '0';
+            });
+            setTimeout(startCounters, 100);
+        }
+        
+        // Start on page load
+        window.addEventListener('load', () => {
+            setTimeout(startCounters, 500);
+        });
+    </script>
+</body>
+</html>

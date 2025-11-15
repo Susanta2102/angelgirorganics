@@ -1,0 +1,741 @@
+/* ========================================
+   PROFESSIONAL & ELEGANT STYLING
+   Clean, Modern, Business-Ready Design
+   ======================================== */
+
+/* Reset excessive animations */
+* {
+    animation: none !important;
+}
+
+/* Smooth, subtle transitions only */
+.smooth-transition {
+    transition: all 0.3s ease;
+}
+
+/* ========================================
+   TYPOGRAPHY - Professional & Clean
+   ======================================== */
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #2c3e50;
+    background: #ffffff;
+    overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #28a745, #20c997);
+    border-radius: 3px;
+}
+
+.section-subtitle {
+    font-size: 1.1rem;
+    color: #6c757d;
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    font-weight: 400;
+}
+
+/* ========================================
+   NAVIGATION - Clean & Professional
+   ======================================== */
+
+.navbar {
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    background: rgba(255, 255, 255, 1) !important;
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.12);
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #28a745 !important;
+    letter-spacing: -0.02em;
+}
+
+.nav-link {
+    color: #2c3e50 !important;
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin: 0 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #28a745 !important;
+}
+
+/* ========================================
+   HERO SECTION - Professional & Impactful
+   ======================================== */
+
+.hero {
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(40, 167, 69, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(32, 201, 151, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 1rem;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    color: #28a745;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    color: #6c757d;
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* ========================================
+   BUTTONS - Professional & Clear
+   ======================================== */
+
+.btn-hero-primary,
+.btn-hero-secondary,
+.btn-hero-instagram,
+.btn-order,
+.btn {
+    padding: 0.9rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-hero-primary,
+.btn-order,
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-hero-primary:hover,
+.btn-order:hover,
+.btn-success:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    color: white;
+}
+
+.btn-hero-secondary {
+    background: white;
+    color: #28a745;
+    border: 2px solid #28a745;
+}
+
+.btn-hero-secondary:hover {
+    background: #28a745;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-hero-instagram {
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    color: white;
+}
+
+.btn-hero-instagram:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(131, 58, 180, 0.4);
+    color: white;
+}
+
+.btn-warning {
+    background: #ffc107;
+    color: #1a1a1a;
+}
+
+.btn-warning:hover {
+    background: #ffb300;
+    transform: translateY(-2px);
+    color: #1a1a1a;
+}
+
+.btn-outline-primary {
+    background: transparent;
+    color: #28a745;
+    border: 2px solid #28a745;
+}
+
+.btn-outline-primary:hover {
+    background: #28a745;
+    color: white;
+}
+
+/* ========================================
+   CARDS - Clean & Professional
+   ======================================== */
+
+.glass-card,
+.product-card,
+.testimonial-card,
+.contact-card,
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.glass-card:hover,
+.product-card:hover,
+.testimonial-card:hover,
+.contact-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transform: translateY(-5px);
+}
+
+.product-card-interactive {
+    position: relative;
+    overflow: hidden;
+}
+
+.product-card-interactive img {
+    transition: transform 0.3s ease;
+}
+
+.product-card-interactive:hover img {
+    transform: scale(1.05);
+}
+
+/* ========================================
+   SECTIONS - Clean Layout
+   ======================================== */
+
+.section {
+    padding: 5rem 0;
+    position: relative;
+}
+
+.section:nth-child(even) {
+    background: #f8f9fa;
+}
+
+/* ========================================
+   STATS SECTION - Professional Display
+   ======================================== */
+
+.stats-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%) !important;
+    color: white !important;
+    padding: 5rem 0 !important;
+}
+
+.stats-section .section-title {
+    color: white !important;
+}
+
+.stats-section .section-title::after {
+    background: linear-gradient(90deg, #28a745, #20c997) !important;
+}
+
+.stats-section .section-subtitle {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.stat-card {
+    background: white !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid #e9ecef !important;
+    padding: 2.5rem !important;
+    margin: 1rem 0 !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+.stat-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 8px 30px rgba(40, 167, 69, 0.3) !important;
+}
+
+.stat-number {
+    font-size: 4rem !important;
+    font-weight: 800 !important;
+    color: #28a745 !important;
+    margin-bottom: 0.5rem !important;
+    line-height: 1 !important;
+    display: block !important;
+    min-height: 70px !important;
+    text-shadow: none !important;
+}
+
+.stat-label {
+    font-size: 1.1rem !important;
+    color: #2c3e50 !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    margin-top: 0.5rem !important;
+}
+
+/* ========================================
+   PRODUCT BADGES - Clean & Clear
+   ======================================== */
+
+.live-counter {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #28a745;
+    color: white;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+    z-index: 10;
+}
+
+.badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-info {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.badge-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* ========================================
+   IMAGES - Professional Display
+   ======================================== */
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.rounded-4 {
+    border-radius: 12px !important;
+}
+
+.shadow,
+.shadow-lg {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ========================================
+   TESTIMONIALS - Clean & Credible
+   ======================================== */
+
+.testimonial-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.testimonial-text {
+    font-size: 1rem;
+    color: #495057;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+/* ========================================
+   CONTACT SECTION - Professional Look
+   ======================================== */
+
+.contact-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.2);
+}
+
+/* ========================================
+   FOOTER - Clean & Organized
+   ======================================== */
+
+.footer {
+    background: #1a1a1a;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 3rem 0 1.5rem;
+}
+
+.footer h5 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.footer a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: #28a745;
+}
+
+.social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background: #28a745;
+    transform: translateY(-3px);
+}
+
+/* ========================================
+   FLOATING ACTIONS - Subtle & Professional
+   ======================================== */
+
+.floating-actions {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    z-index: 1000;
+}
+
+.floating-btn {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.floating-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.back-to-top {
+    background: #28a745;
+}
+
+.whatsapp {
+    background: #25D366;
+}
+
+.phone {
+    background: #007bff;
+}
+
+.share {
+    background: #6c757d;
+}
+
+/* ========================================
+   CALCULATOR - Professional Interface
+   ======================================== */
+
+.calculator-header {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: -2rem -2rem 2rem -2rem;
+}
+
+.bill-summary {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 2rem;
+    border-left: 4px solid #28a745;
+}
+
+/* ========================================
+   FORMS - Clean & User-Friendly
+   ======================================== */
+
+.form-control,
+.form-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.1);
+}
+
+/* ========================================
+   LOADING SCREEN - Professional
+   ======================================== */
+
+.loader {
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-content {
+    text-align: center;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #28a745;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   REMOVE EXCESSIVE ANIMATIONS
+   ======================================== */
+
+/* Remove floating elements */
+.floating-elements,
+.floating-element {
+    display: none !important;
+}
+
+/* Remove particle background */
+.particle-bg,
+.particle {
+    display: none !important;
+}
+
+/* Remove cursor trail */
+.cursor-trail {
+    display: none !important;
+}
+
+/* Simplify hover effects */
+.magnetic-btn,
+.holographic-text,
+.neon-text,
+.sparkle-text,
+.morphing-bg {
+    animation: none !important;
+    filter: none !important;
+}
+
+/* ========================================
+   RESPONSIVE - Mobile Professional
+   ======================================== */
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .section {
+        padding: 3rem 0;
+    }
+    
+    .floating-actions {
+        bottom: 1rem;
+        right: 1rem;
+    }
+    
+    .floating-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.1rem;
+    }
+}
+
+/* ========================================
+   SUBTLE ENHANCEMENTS ONLY
+   ======================================== */
+
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Better focus states */
+*:focus-visible {
+    outline: 2px solid #28a745;
+    outline-offset: 2px;
+}
+
+/* Professional color scheme */
+:root {
+    --primary: #28a745;
+    --secondary: #20c997;
+    --dark: #1a1a1a;
+    --light: #f8f9fa;
+    --text: #2c3e50;
+    --border: #e9ecef;
+}
+
+/* Clean selection */
+::selection {
+    background: #28a745;
+    color: white;
+}
+
+/* Professional scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #28a745;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #218838;
+}
