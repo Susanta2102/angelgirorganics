@@ -12,8 +12,8 @@ const API_CONFIG = {
         if (isLocal) {
             return 'http://localhost:5000';
         } else {
-            // IMPORTANT: Replace this with your actual Render backend URL after deployment
-            return 'https://angelorganics-backend.onrender.com';
+            // Your Render backend URL
+            return 'https://angel-organics-backend.onrender.com';
         }
     },
     
