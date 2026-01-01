@@ -11,12 +11,157 @@ class AngelOrganicsChatbot {
         // Use API_CONFIG if available, fallback to localhost
         this.apiEndpoint = window.API_CONFIG ? window.API_CONFIG.getChatUrl() : 'http://localhost:5000/api/chat';
         this.isTyping = false;
+        this.language = 'en'; // Default language
+        this.isListening = false;
+        this.recognition = null;
+        this.synthesis = window.speechSynthesis;
+        this.voiceEnabled = false;
         
         this.init();
+        this.initVoiceRecognition();
     }
     
     generateSessionId() {
         return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+    
+    initVoiceRecognition() {
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            this.recognition = new SpeechRecognition();
+            this.recognition.continuous = false;
+            this.recognition.interimResults = false;
+            this.recognition.lang = 'en-US';
+            
+            this.recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('chatbotInput').value = transcript;
+                this.sendMessage();
+            };
+            
+            this.recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                this.stopListening();
+            };
+            
+            this.recognition.onend = () => {
+                this.stopListening();
+            };
+        }
+    }
+    
+    toggleVoice() {
+        this.voiceEnabled = !this.voiceEnabled;
+        const voiceBtn = document.getElementById('voiceToggle');
+        if (voiceBtn) {
+            voiceBtn.innerHTML = this.voiceEnabled ? 
+                '<i class="fas fa-volume-up"></i>' : 
+                '<i class="fas fa-volume-mute"></i>';
+            voiceBtn.style.background = this.voiceEnabled ? 
+                'linear-gradient(135deg, #28a745, #20c997)' : 
+                '#6c757d';
+        }
+    }
+    
+    startListening() {
+        if (this.recognition && !this.isListening) {
+            this.isListening = true;
+            this.recognition.lang = this.language === 'hi' ? 'hi-IN' : 'en-US';
+            this.recognition.start();
+            
+            const micBtn = document.getElementById('micButton');
+            if (micBtn) {
+                micBtn.classList.add('listening');
+                micBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+            }
+        }
+    }
+    
+    stopListening() {
+        if (this.recognition && this.isListening) {
+            this.isListening = false;
+            this.recognition.stop();
+            
+            const micBtn = document.getElementById('micButton');
+            if (micBtn) {
+                micBtn.classList.remove('listening');
+                micBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            }
+        }
+    }
+    
+    speak(text) {
+        if (this.voiceEnabled && this.synthesis) {
+            // Cancel any ongoing speech
+            this.synthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = this.language === 'hi' ? 'hi-IN' : 'en-US';
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            
+            this.synthesis.speak(utterance);
+        }
+    }
+    
+    toggleLanguage() {
+        this.language = this.language === 'en' ? 'hi' : 'en';
+        const langBtn = document.getElementById('languageToggle');
+        if (langBtn) {
+            langBtn.textContent = this.language === 'en' ? '🇬🇧 EN' : '🇮🇳 HI';
+        }
+        
+        // Update recognition language if available
+        if (this.recognition) {
+            this.recognition.lang = this.language === 'hi' ? 'hi-IN' : 'en-US';
+        }
+        
+        // Show language change message
+        this.addMessage({
+            type: 'bot',
+            text: this.language === 'en' ? 
+                'Language switched to English 🇬🇧' : 
+                'भाषा हिंदी में बदल गई 🇮🇳',
+            timestamp: new Date()
+        });
+    }
+    
+    async exportChat() {
+        try {
+            const response = await fetch(this.apiEndpoint.replace('/chat', '/export-chat'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    session_id: this.sessionId
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Create downloadable file
+                const blob = new Blob([JSON.stringify(data.messages, null, 2)], 
+                    { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `angel-organics-chat-${Date.now()}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                this.addMessage({
+                    type: 'bot',
+                    text: '✅ Chat history exported successfully!',
+                    timestamp: new Date()
+                });
+            }
+        } catch (error) {
+            console.error('Error exporting chat:', error);
+        }
     }
     
     init() {
@@ -46,9 +191,20 @@ class AngelOrganicsChatbot {
                                 </div>
                             </div>
                         </div>
-                        <button class="chatbot-close" id="chatbotClose">
-                            <i class="fas fa-times"></i>
-                        </button>
+                        <div class="chatbot-actions">
+                            <button class="chatbot-action-btn" id="languageToggle" title="Switch Language">
+                                🇬🇧 EN
+                            </button>
+                            <button class="chatbot-action-btn" id="voiceToggle" title="Toggle Voice">
+                                <i class="fas fa-volume-mute"></i>
+                            </button>
+                            <button class="chatbot-action-btn" id="exportChat" title="Export Chat">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="chatbot-close" id="chatbotClose">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="chatbot-messages" id="chatbotMessages">
@@ -56,6 +212,9 @@ class AngelOrganicsChatbot {
                     </div>
                     
                     <div class="chatbot-input-area">
+                        <button class="mic-button" id="micButton" title="Voice Input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
                         <input 
                             type="text" 
                             class="chatbot-input" 
@@ -79,10 +238,36 @@ class AngelOrganicsChatbot {
         const close = document.getElementById('chatbotClose');
         const sendBtn = document.getElementById('chatbotSend');
         const input = document.getElementById('chatbotInput');
+        const micBtn = document.getElementById('micButton');
+        const langBtn = document.getElementById('languageToggle');
+        const voiceBtn = document.getElementById('voiceToggle');
+        const exportBtn = document.getElementById('exportChat');
         
         toggle.addEventListener('click', () => this.toggleChatbot());
         close.addEventListener('click', () => this.closeChatbot());
         sendBtn.addEventListener('click', () => this.sendMessage());
+        
+        if (micBtn) {
+            micBtn.addEventListener('click', () => {
+                if (this.isListening) {
+                    this.stopListening();
+                } else {
+                    this.startListening();
+                }
+            });
+        }
+        
+        if (langBtn) {
+            langBtn.addEventListener('click', () => this.toggleLanguage());
+        }
+        
+        if (voiceBtn) {
+            voiceBtn.addEventListener('click', () => this.toggleVoice());
+        }
+        
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => this.exportChat());
+        }
         
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -116,21 +301,27 @@ class AngelOrganicsChatbot {
     showWelcomeMessage() {
         const welcomeMsg = {
             type: 'bot',
-            text: `Namaste! 🙏 Welcome to Angel Organics!\n\nI'm your AI assistant, here to help you with:\n\n🥛 Premium A2 Milk Products\n🌟 Health Benefits\n📦 Order Information\n🚚 Delivery Details\n\nHow can I help you today?`,
+            text: `Namaste! 🙏 Welcome to Angel Organics!\n\nI'm your AI assistant with amazing features:\n\n🎤 Voice Input - Click mic to speak\n🔊 Voice Output - Toggle to hear responses\n🌐 Multi-language - Switch between English & Hindi\n📸 Product Gallery - View products with images\n📦 Order Tracking - Track your orders\n📥 Export Chat - Download conversation\n\nHow can I help you today?`,
             timestamp: new Date()
         };
         
         this.addMessage(welcomeMsg);
         this.showQuickReplies();
+        
+        // Speak welcome if voice enabled
+        if (this.voiceEnabled) {
+            this.speak(welcomeMsg.text);
+        }
     }
     
     showQuickReplies() {
         const quickReplies = [
-            'View Products',
-            'Check Prices',
-            'A2 Milk Benefits',
-            'Place Order',
-            'Delivery Info'
+            'View Products 🥛',
+            'Check Prices 💰',
+            'A2 Benefits 🌟',
+            'Place Order 📦',
+            'Track Order 🔍',
+            'Product Gallery 📸'
         ];
         
         const messagesContainer = document.getElementById('chatbotMessages');
@@ -153,8 +344,110 @@ class AngelOrganicsChatbot {
             quickReplies.remove();
         }
         
+        // Handle special quick replies
+        if (text.includes('Product Gallery')) {
+            this.showProductGallery();
+            return;
+        }
+        
+        if (text.includes('Track Order')) {
+            this.showOrderTracking();
+            return;
+        }
+        
         // Send as user message
         document.getElementById('chatbotInput').value = text;
+        this.sendMessage();
+    }
+    
+    showProductGallery() {
+        const products = [
+            {
+                name: 'Fresh A2 Milk',
+                price: '₹75/liter',
+                image: '🥛',
+                description: 'Pure Gir cow milk delivered within 6 hours'
+            },
+            {
+                name: 'Golden A2 Ghee',
+                price: '₹2500/kg',
+                image: '🧈',
+                description: 'Traditional bilona method ghee'
+            },
+            {
+                name: 'Fresh Butter',
+                price: '₹1200/kg',
+                image: '🧈',
+                description: 'Hand-churned, no preservatives'
+            },
+            {
+                name: 'Probiotic Buttermilk',
+                price: '₹30/liter',
+                image: '🥤',
+                description: 'Aids digestion naturally'
+            },
+            {
+                name: 'Thick Curd',
+                price: '₹100/kg',
+                image: '🥣',
+                description: 'Live cultures, protein-rich'
+            }
+        ];
+        
+        let galleryHTML = '<div class="product-gallery">';
+        products.forEach(product => {
+            galleryHTML += `
+                <div class="product-card">
+                    <div class="product-icon">${product.image}</div>
+                    <h4>${product.name}</h4>
+                    <p class="product-desc">${product.description}</p>
+                    <p class="product-price">${product.price}</p>
+                    <button class="order-product-btn" onclick="angelChatbot.quickOrder('${product.name}')">
+                        Order Now
+                    </button>
+                </div>
+            `;
+        });
+        galleryHTML += '</div>';
+        
+        this.addMessage({
+            type: 'bot',
+            text: '📸 **Our Premium Products:**\n\n' + galleryHTML,
+            timestamp: new Date(),
+            isHTML: true
+        });
+    }
+    
+    showOrderTracking() {
+        const trackingHTML = `
+            <div class="order-tracking-form">
+                <h4>🔍 Track Your Order</h4>
+                <p>Enter your order ID (e.g., AO-12345678)</p>
+                <div class="tracking-input-group">
+                    <input type="text" id="orderIdInput" placeholder="AO-XXXXXXXX" />
+                    <button onclick="angelChatbot.trackOrder()">Track</button>
+                </div>
+            </div>
+        `;
+        
+        this.addMessage({
+            type: 'bot',
+            text: trackingHTML,
+            timestamp: new Date(),
+            isHTML: true
+        });
+    }
+    
+    async trackOrder() {
+        const orderId = document.getElementById('orderIdInput').value.trim().toUpperCase();
+        if (orderId) {
+            document.getElementById('chatbotInput').value = `Track order ${orderId}`;
+            this.sendMessage();
+        }
+    }
+    
+    quickOrder(productName) {
+        document.getElementById('chatbotInput').value = `I want to order ${productName}`;
         this.sendMessage();
     }
     
@@ -179,7 +472,7 @@ class AngelOrganicsChatbot {
         
         try {
             // Send to backend API
-            const response = await this.sendToAPI(message);
+            const responseData = await this.sendToAPI(message);
             
             // Remove typing indicator
             this.hideTypingIndicator();
@@ -187,7 +480,8 @@ class AngelOrganicsChatbot {
             // Add bot response
             this.addMessage({
                 type: 'bot',
-                text: response,
+                text: responseData.response,
+                voiceText: responseData.voice_response, // Clean text for voice
                 timestamp: new Date()
             });
             
@@ -212,7 +506,8 @@ class AngelOrganicsChatbot {
                 },
                 body: JSON.stringify({
                     message: message,
-                    session_id: this.sessionId
+                    session_id: this.sessionId,
+                    language: this.language
                 })
             });
             
@@ -221,13 +516,32 @@ class AngelOrganicsChatbot {
             }
             
             const data = await response.json();
-            return data.response;
+            
+            // Log sentiment for analytics
+            if (data.sentiment) {
+                console.log('Message sentiment:', data.sentiment);
+            }
+            
+            // Return both response and voice_response
+            return {
+                response: data.response,
+                voice_response: data.voice_response || data.response // Fallback to regular response
+            };
             
         } catch (error) {
             console.error('API Error:', error);
             // Fallback to local responses if API is down
-            return this.getLocalResponse(message);
+            const localResponse = this.getLocalResponse(message);
+            return {
+                response: localResponse,
+                voice_response: this.removeEmojis(localResponse)
+            };
         }
+    }
+    
+    removeEmojis(text) {
+        // Remove emojis for voice output
+        return text.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}\u{2702}-\u{27B0}\u{24C2}-\u{1F251}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}]/gu, '').trim();
     }
     
     getLocalResponse(message) {
@@ -271,7 +585,7 @@ class AngelOrganicsChatbot {
                     ${message.type === 'bot' ? '🤖' : '👤'}
                 </div>
                 <div class="message-content">
-                    ${this.formatMessage(message.text)}
+                    ${message.isHTML ? message.text : this.formatMessage(message.text)}
                     <div class="message-time">${this.formatTime(message.timestamp)}</div>
                 </div>
             </div>
@@ -279,6 +593,12 @@ class AngelOrganicsChatbot {
         
         messagesContainer.insertAdjacentHTML('beforeend', messageHTML);
         this.scrollToBottom();
+        
+        // Speak bot messages if voice enabled - use voiceText if available
+        if (message.type === 'bot' && this.voiceEnabled && !message.isHTML) {
+            const textToSpeak = message.voiceText || this.removeEmojis(message.text);
+            this.speak(textToSpeak);
+        }
     }
     
     formatMessage(text) {
