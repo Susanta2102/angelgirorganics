@@ -4,7 +4,7 @@ services:
     name: angelorganics-backend
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: cd backend && gunicorn chatbot_backend:app
+    startCommand: cd backend && gunicorn chatbot_backend:app --bind 0.0.0.0:$PORT
     envVars:
       - key: GROQ_API_KEY
         sync: false
