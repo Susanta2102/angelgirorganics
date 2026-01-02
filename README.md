@@ -1,251 +1,301 @@
 # 🐄 Angel Organics - Premium Gir Cow Dairy Farm
 
-A modern, professional website for Angel Organics, featuring an AI-powered chatbot to assist customers with product inquiries, orders, and farm information.
+<div align="center">
 
-## 🌐 Live Website
+![Angel Organics](https://img.shields.io/badge/Angel-Organics-green?style=for-the-badge)
+![AI Powered](https://img.shields.io/badge/AI-Powered-blue?style=for-the-badge)
+![100% Organic](https://img.shields.io/badge/100%25-Organic-success?style=for-the-badge)
 
-**Frontend**: [https://angelgirorganics.onrender.com](https://angelgirorganics.onrender.com)  
-**Backend API**: [https://angel-organics-backend.onrender.com](https://angel-organics-backend.onrender.com)
+**Premium A2 Milk & Organic Dairy Products from Ajmer, Rajasthan**
 
----
+[🌐 Live Website](#) | [📱 Instagram](https://instagram.com/angelorganic_ajmer) | [📞 Contact Us](#contact)
 
-## ✨ Features
-
-### 🎨 Professional Design
-- Clean, modern interface with smooth animations
-- Fully responsive design (mobile, tablet, desktop)
-- Dark/light theme sections with gradient backgrounds
-- Professional color scheme (green & gold accents)
-- Optimized performance with minimal animations
-
-### 🤖 AI Chatbot
-- Powered by **Groq API** (Llama 3.3 70B model)
-- Built with **LangChain** framework
-- Real-time responses to customer queries
-- Conversation history management
-- Product information, pricing, and ordering assistance
-- Farm location and contact details
-
-### 📱 Key Sections
-- **Hero Section**: Eye-catching introduction with CTA buttons
-- **About Us**: Farm history and mission
-- **Products**: A2 Milk, Ghee, Butter, Curd, Buttermilk
-- **Benefits**: Health advantages of A2 milk
-- **Gallery**: Farm and product images
-- **Testimonials**: Customer reviews
-- **Statistics**: Achievement counters with scroll animations
-- **Contact Form**: WhatsApp integration
-- **Location Map**: Embedded Google Maps
+</div>
 
 ---
 
-## 🛠️ Technology Stack
+## 📖 About Angel Organics
 
-### Frontend
-- **HTML5** - Semantic markup
-- **CSS3** - Custom styling with gradients and animations
-- **JavaScript (Vanilla)** - Interactive features
-- **Bootstrap 5.3.0** - Responsive grid system
-- **Font Awesome 6.4.0** - Icons
-- **AOS 2.3.4** - Scroll animations
-- **Google Fonts** - Poppins font family
+Angel Organics is a premium Gir cow dairy farm located in Ajmer, Rajasthan, dedicated to providing 100% organic, chemical-free dairy products. Under the expert supervision of **Dr. Sunil K Rai** (Veterinary Surgeon with 20+ years experience), we maintain a herd of 20 pure Gir cows, producing 100 liters of fresh A2 milk daily using traditional Vedic farming methods.
 
-### Backend
-- **Python 3.13** - Backend runtime
-- **Flask 3.0.0** - Web framework
-- **Flask-CORS 4.0.0** - Cross-origin resource sharing
-- **LangChain 0.3.7** - AI framework
-- **LangChain-Groq 0.2.1** - Groq integration
-- **Groq 0.13.0** - LLM API client
-- **Gunicorn 23.0.0** - Production WSGI server
+### 🌟 What Makes Us Special
+
+- ✅ **Pure A2 Milk** - Easy to digest, rich in nutrients
+- ✅ **100% Organic** - No chemicals, hormones, or preservatives
+- ✅ **Traditional Methods** - Bilona ghee, hand-churned butter
+- ✅ **Expert Care** - Supervised by Dr. Sunil K Rai (Veterinary Surgeon)
+- ✅ **Same-Day Delivery** - Fresh products delivered within 6 hours
+- ✅ **Ethical Farming** - Humane treatment of animals
 
 ---
 
-## 🚀 Deployment
+## 🥛 Our Products
 
-### Hosting
-- **Platform**: Render.com (Free tier)
-- **Frontend**: Static Site deployment
-- **Backend**: Web Service deployment
-- **Auto-deploy**: Enabled on push to `main` branch
+| Product | Price | Features |
+|---------|-------|----------|
+| **Fresh Gir Cow A2 Milk** | ₹75/liter | Delivered within 6 hours, pure & organic |
+| **Golden A2 Ghee** | ₹2,500/kg or ₹1,300/500g | Traditional bilona method |
+| **Fresh Butter** | ₹1,200/kg | Hand-churned, no preservatives |
+| **Probiotic Buttermilk** | ₹30/liter | Aids digestion |
+| **Thick Curd** | ₹100/kg | Live cultures, protein-rich |
 
-### Environment Variables (Backend)
-```bash
-GROQ_API_KEY=your_groq_api_key_here
-```
-
----
-
-## 📦 Local Development Setup
-
-### Prerequisites
-- Python 3.13+
-- Git
-- Virtual environment tool
-
-### Installation
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/Susanta2102/angelgirorganics.git
-cd angelgirorganics
-```
-
-2. **Set up Python virtual environment**
-```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
-
-3. **Install dependencies**
-```bash
-pip install -r requirements.txt
-```
-
-4. **Create `.env` file**
-```bash
-cp .env.example .env
-# Edit .env and add your GROQ_API_KEY
-```
-
-5. **Run the backend**
-```bash
-python chatbot-backend.py
-```
-
-6. **Run the frontend**
-```bash
-# In a new terminal
-python3 -m http.server 8000
-```
-
-7. **Access the website**
-- Frontend: http://localhost:8000/index.html
-- Backend API: http://localhost:5000/api/health
+### 🎁 Special Offers
+- 🎯 **5% discount** on orders ≥ ₹2,000
+- 🚚 **FREE delivery** across Ajmer
+- ⏰ **Morning delivery** (6-8 AM) available
 
 ---
 
-## 📁 Project Structure
+## 🤖 AI-Powered Features
+
+Our website features a cutting-edge **AI Chatbot** powered by Groq's Llama 3.3 70B model with amazing capabilities:
+
+### ✨ Chatbot Features
+
+🎤 **Voice Input/Output**
+- Speak to the chatbot using your microphone
+- Hear responses read aloud (emoji-free for clarity)
+
+🌐 **Multi-Language Support**
+- Switch between English and Hindi seamlessly
+- Natural language understanding
+
+📸 **Product Gallery**
+- Visual product showcase with images
+- Interactive product cards
+
+📦 **Order Tracking**
+- Track your orders with unique IDs (e.g., AO-12345678)
+- Real-time order status updates
+
+😊 **Sentiment Analysis**
+- Analyzes customer satisfaction
+- Provides personalized responses
+
+💾 **Chat Export**
+- Download your conversation history
+- Keep records of product inquiries
+
+---
+
+## 🏗️ Project Structure
 
 ```
 angelgirorganics/
-├── index.html              # Main website file
-├── professional-style.css  # Custom styling
-├── chatbot-backend.py      # Flask backend API
-├── chatbot-frontend.js     # Chatbot UI logic
-├── chatbot.css            # Chatbot styling
-├── api-config.js          # API endpoint configuration
-├── requirements.txt       # Python dependencies
-├── Procfile              # Render deployment config
-├── render.yaml           # Render service configuration
-├── .env.example          # Environment variables template
-├── .gitignore            # Git ignore rules
-├── README.md             # This file
-├── *.jpg, *.png          # Product and farm images
-└── setup scripts/        # Setup automation scripts
+├── 📁 backend/              # Flask backend with AI
+│   ├── chatbot-backend.py   # Main chatbot server
+│   ├── requirements.txt     # Python dependencies
+│   └── .env                 # Environment variables
+│
+├── 📁 frontend/             # Website frontend
+│   ├── index.html           # Main website
+│   ├── 📁 css/             # Stylesheets
+│   │   ├── style.css
+│   │   ├── chatbot.css
+│   │   ├── professional-style.css
+│   │   └── premium-effects.css
+│   └── 📁 js/              # JavaScript files
+│       ├── script.js
+│       ├── chatbot-frontend.js
+│       └── api-config.js
+│
+├── 📁 assets/              # Media files
+│   ├── 📁 images/          # Product & farm photos (37 images)
+│   └── 📁 videos/          # Farm videos (2 videos)
+│
+├── 📁 config/              # Configuration files
+│   ├── render.yaml         # Render deployment config
+│   └── .env.example        # Environment template
+│
+├── 📁 docs/                # Documentation
+├── 📁 scripts/             # Utility scripts
+├── 📁 posters/             # LaTeX posters
+└── 📁 tests/               # Test files
 ```
 
 ---
 
-## 🔧 Configuration
+## 🚀 Quick Start
 
-### API Configuration
-Edit `api-config.js` to switch between local and production:
-```javascript
-const API_CONFIG = {
-    getApiUrl() {
-        // Automatically detects localhost vs production
-        const isLocal = window.location.hostname === 'localhost';
-        return isLocal 
-            ? 'http://localhost:5000' 
-            : 'https://angel-organics-backend.onrender.com';
-    }
-};
-```
+### Prerequisites
 
-### Chatbot Customization
-Edit `chatbot-backend.py` to modify:
-- System prompt and knowledge base
-- LLM model (currently using `llama-3.3-70b-versatile`)
-- Temperature and max tokens
-- Response formatting
+- Python 3.11+
+- Node.js (optional, for serving frontend)
+- Groq API Key ([Get one here](https://console.groq.com/keys))
+
+### Local Development
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/Susanta2102/angelgirorganics.git
+   cd angelgirorganics
+   ```
+
+2. **Setup Backend**
+   ```bash
+   cd backend
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+3. **Configure Environment**
+   ```bash
+   cp ../config/.env.example .env
+   # Edit .env and add your GROQ_API_KEY
+   ```
+
+4. **Start Backend Server**
+   ```bash
+   python3 chatbot-backend.py
+   # Server runs on http://localhost:5000
+   ```
+
+5. **Open Frontend**
+   ```bash
+   cd ../frontend
+   python3 -m http.server 8000
+   # Visit http://localhost:8000
+   ```
+
+### 🌐 Deploy to Render
+
+1. Push code to GitHub
+2. Connect repository to Render
+3. Add `GROQ_API_KEY` in Render dashboard (Environment Variables)
+4. Deploy automatically!
 
 ---
 
-## 📊 API Endpoints
+## 🔧 Tech Stack
 
-### Health Check
-```
-GET /api/health
-Response: {"status": "healthy", "service": "Angel Organics Chatbot", ...}
-```
+### Backend
+- **Framework:** Flask 3.0.0
+- **AI Model:** Groq Llama 3.3 70B Versatile
+- **LangChain:** 0.3.7 (for conversational AI)
+- **CORS:** Flask-CORS 4.0.0
 
-### Chat
-```
-POST /api/chat
-Body: {"message": "your question", "session_id": "unique_id"}
-Response: {"response": "AI response", "session_id": "..."}
-```
+### Frontend
+- **HTML5** + **CSS3** + **Vanilla JavaScript**
+- **Bootstrap 5.3** (UI framework)
+- **Font Awesome 6.4** (icons)
+- **AOS** (scroll animations)
+- **Speech Recognition API** (voice input)
+- **Speech Synthesis API** (voice output)
 
-### Clear History
-```
-POST /api/clear-history
-Body: {"session_id": "unique_id"}
-Response: {"status": "success"}
-```
+### Deployment
+- **Backend:** Render (Python web service)
+- **Frontend:** Render (static site)
+- **Version Control:** Git + GitHub
 
 ---
 
-## 🎯 Product Information
+## 📱 Contact & Social Media
 
-### Our Products
-- **Fresh Gir Cow A2 Milk**: ₹75/liter
-- **Golden A2 Ghee**: ₹2500/kg or ₹1300/500g
-- **Fresh Butter**: ₹1200/kg
-- **Probiotic Buttermilk**: ₹30/liter
-- **Thick Curd**: ₹100/kg
+<div align="center">
 
-### Contact
-- **Phone**: +91 8811013758
-- **Email**: angelgirorganics@gmail.com
-- **Location**: Ajmer, Rajasthan, India
+### 📞 Get in Touch
+
+**Phone/WhatsApp:** [+91 8811013758](https://wa.me/918811013758)
+
+**Email:** [drsunilkrai1975@gmail.com](mailto:drsunilkrai1975@gmail.com)
+
+**Instagram:** [@angelorganic_ajmer](https://instagram.com/angelorganic_ajmer)
+
+**Location:** Ajmer, Rajasthan, India 🇮🇳
+
+</div>
+
+---
+
+## 🎯 Key Features
+
+### Website Features
+- 🎨 **Modern Responsive Design** - Works on all devices
+- 🌙 **Dark Mode** - Easy on the eyes
+- ⚡ **Fast Loading** - Optimized performance
+- 🔍 **SEO Optimized** - Better search rankings
+- 📸 **Photo Gallery** - 37+ farm & product images
+- 🎥 **Video Content** - Farm tour videos
+- 📱 **QR Codes** - Quick Instagram access
+
+### AI Chatbot Capabilities
+- Natural conversation in English & Hindi
+- Product information & pricing
+- Health benefits of A2 milk
+- Order assistance & tracking
+- Farm information & history
+- Delivery details
+- Custom product recommendations
 
 ---
 
 ## 🤝 Contributing
 
-This is a private commercial project. For inquiries, contact the owner.
+We welcome contributions! Here's how you can help:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
+4. **Push** to the branch (`git push origin feature/amazing-feature`)
+5. **Open** a Pull Request
+
+### Development Guidelines
+- Follow existing code style
+- Test thoroughly before submitting
+- Update documentation as needed
+- Keep commits clear and descriptive
 
 ---
 
 ## 📄 License
 
-Copyright © 2025 Angel Organics. All rights reserved.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **Groq** - For providing fast LLM inference
-- **LangChain** - For the AI framework
-- **Render** - For free hosting
-- **Bootstrap** - For responsive design
+- **Dr. Sunil K Rai** - Founder & Veterinary Expert
+- **Susanta Baidya** - Full Stack AI Developer ([GitHub](https://github.com/Susanta2102) | [LinkedIn](https://www.linkedin.com/in/susanta-baidya-03436628a/))
+- **Groq** - For providing the AI infrastructure
+- **LangChain** - For conversational AI framework
+- **Bootstrap** - For UI components
 - **Font Awesome** - For beautiful icons
 
+---
+
+## 📊 Project Stats
+
+![GitHub stars](https://img.shields.io/github/stars/Susanta2102/angelgirorganics?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Susanta2102/angelgirorganics?style=social)
+![GitHub issues](https://img.shields.io/github/issues/Susanta2102/angelgirorganics)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/Susanta2102/angelgirorganics)
 
 ---
 
-## 🔄 Version History
+## 🔮 Future Roadmap
 
-### v1.0.0 (November 2025)
-- ✅ Initial release
-- ✅ Professional website design
-- ✅ AI chatbot integration
-- ✅ Deployed to production
-- ✅ Full mobile responsiveness
-- ✅ WhatsApp integration
-- ✅ Google Maps integration
+- [ ] Mobile app (Android & iOS)
+- [ ] Online payment integration
+- [ ] Subscription plans
+- [ ] Product reviews & ratings
+- [ ] Delivery tracking with GPS
+- [ ] Recipe suggestions
+- [ ] Nutritional calculator
+- [ ] Loyalty rewards program
 
 ---
 
-**Built with ❤️ for Angel Organics - Pure, Natural, Healthy**
+<div align="center">
+
+**Made with ❤️ by [Susanta Baidya](https://github.com/Susanta2102) in Ajmer, Rajasthan**
+
+**Pure Milk, Pure Love, Pure Life** 🐄🥛
+
+---
+
+[![Deploy to Render](https://img.shields.io/badge/Deploy-Render-46E3B7?style=for-the-badge&logo=render)](https://render.com)
+[![Star on GitHub](https://img.shields.io/badge/Star-GitHub-yellow?style=for-the-badge&logo=github)](https://github.com/Susanta2102/angelgirorganics)
+
+</div>

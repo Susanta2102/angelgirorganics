@@ -20,8 +20,10 @@ from datetime import datetime
 import json
 import re
 
-# Load environment variables
-load_dotenv()
+# Load environment variables from current directory or config directory
+load_dotenv()  # Try current directory first
+if not os.getenv('GROQ_API_KEY'):
+    load_dotenv('../config/.env')  # Try config directory
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
