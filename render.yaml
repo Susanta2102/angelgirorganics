@@ -3,7 +3,7 @@ services:
   - type: web
     name: angelorganics-backend
     runtime: python
-    buildCommand: cd backend && pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt
     startCommand: cd backend && gunicorn chatbot-backend:app
     envVars:
       - key: GROQ_API_KEY
