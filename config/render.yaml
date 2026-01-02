@@ -3,8 +3,8 @@ services:
   - type: web
     name: angelorganics-backend
     runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn chatbot-backend:app
+    buildCommand: cd backend && pip install -r requirements.txt
+    startCommand: cd backend && gunicorn chatbot-backend:app
     envVars:
       - key: GROQ_API_KEY
         sync: false
@@ -16,7 +16,7 @@ services:
     name: angelorganics-frontend
     runtime: static
     buildCommand: echo "No build needed"
-    staticPublishPath: .
+    staticPublishPath: frontend
     routes:
       - type: rewrite
         source: /*
