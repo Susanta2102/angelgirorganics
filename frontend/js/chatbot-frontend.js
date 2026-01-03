@@ -169,6 +169,304 @@ class AngelOrganicsChatbot {
         }
     }
     
+    async exportChatAsPDF() {
+        try {
+            // Create professional PDF content
+            const pdfContent = this.generatePDFContent();
+            
+            // Create a new window for printing
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(pdfContent);
+            printWindow.document.close();
+            
+            // Wait for content to load then print
+            printWindow.onload = function() {
+                printWindow.focus();
+                printWindow.print();
+            };
+            
+            this.addMessage({
+                type: 'bot',
+                text: '✅ Opening print dialog to save as PDF...',
+                timestamp: new Date()
+            });
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            this.addMessage({
+                type: 'bot',
+                text: '❌ Error generating PDF. Please try again.',
+                timestamp: new Date()
+            });
+        }
+    }
+    
+    generatePDFContent() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-IN', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        const timeStr = now.toLocaleTimeString('en-IN');
+        
+        let messagesHTML = '';
+        this.messages.forEach((msg, index) => {
+            const time = new Date(msg.timestamp).toLocaleTimeString('en-IN', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const senderClass = msg.type === 'user' ? 'user-msg' : 'bot-msg';
+            const senderLabel = msg.type === 'user' ? 'Customer' : 'Angel Organics AI';
+            const icon = msg.type === 'user' ? '👤' : '🐄';
+            
+            messagesHTML += `
+                <div class="chat-message ${senderClass}">
+                    <div class="msg-header">
+                        <span class="msg-icon">${icon}</span>
+                        <span class="msg-sender">${senderLabel}</span>
+                        <span class="msg-time">${time}</span>
+                    </div>
+                    <div class="msg-content">${this.escapeHtml(msg.text)}</div>
+                </div>
+            `;
+        });
+        
+        return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Angel Organics - Chat Conversation</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+        
+        .pdf-header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 3px solid #28a745;
+            margin-bottom: 30px;
+        }
+        
+        .pdf-logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .pdf-title {
+            font-size: 28px;
+            color: #28a745;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .pdf-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .pdf-meta {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .meta-item {
+            font-size: 14px;
+        }
+        
+        .meta-label {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .meta-value {
+            color: #333;
+        }
+        
+        .chat-messages {
+            padding: 0;
+        }
+        
+        .chat-message {
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
+        
+        .msg-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .msg-icon {
+            font-size: 20px;
+        }
+        
+        .msg-sender {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .msg-time {
+            font-size: 12px;
+            color: #999;
+            margin-left: auto;
+        }
+        
+        .msg-content {
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .user-msg .msg-sender {
+            color: #2196F3;
+        }
+        
+        .user-msg .msg-content {
+            background: #E3F2FD;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .bot-msg .msg-sender {
+            color: #28a745;
+        }
+        
+        .bot-msg .msg-content {
+            background: #f0f8f0;
+            border-left: 4px solid #28a745;
+        }
+        
+        .pdf-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+            text-align: center;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .contact-item {
+            font-size: 13px;
+        }
+        
+        .contact-icon {
+            margin-right: 5px;
+        }
+        
+        .footer-note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+        }
+        
+        @media print {
+            body {
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+            
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pdf-header">
+        <div class="pdf-logo">🐄</div>
+        <div class="pdf-title">Angel Organics</div>
+        <div class="pdf-subtitle">Premium Gir Cow Dairy Farm - Chat Conversation</div>
+    </div>
+    
+    <div class="pdf-meta">
+        <div class="meta-item">
+            <span class="meta-label">Date:</span>
+            <span class="meta-value">${dateStr}</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Time:</span>
+            <span class="meta-value">${timeStr}</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Messages:</span>
+            <span class="meta-value">${this.messages.length}</span>
+        </div>
+        <div class="meta-item">
+            <span class="meta-label">Session:</span>
+            <span class="meta-value">${this.sessionId.substring(0, 20)}...</span>
+        </div>
+    </div>
+    
+    <div class="chat-messages">
+        ${messagesHTML}
+    </div>
+    
+    <div class="pdf-footer">
+        <div class="contact-info">
+            <div class="contact-item">
+                <span class="contact-icon">📞</span>
+                <strong>Phone:</strong> +91 8811013758
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">📧</span>
+                <strong>Email:</strong> drsunilkrai1975@gmail.com
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">📍</span>
+                <strong>Location:</strong> Ajmer, Rajasthan
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">🌐</span>
+                <strong>Instagram:</strong> @angelorganic_ajmer
+            </div>
+        </div>
+        <div class="footer-note">
+            This conversation was generated by Angel Organics AI Assistant<br>
+            For fresh deliveries of premium A2 milk and organic products, contact us today!
+        </div>
+    </div>
+</body>
+</html>`;
+    }
+    
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
     init() {
         this.createChatbotUI();
         this.attachEventListeners();
@@ -203,7 +501,10 @@ class AngelOrganicsChatbot {
                             <button class="chatbot-action-btn" id="voiceToggle" title="Toggle Voice">
                                 <i class="fas fa-volume-mute"></i>
                             </button>
-                            <button class="chatbot-action-btn" id="exportChat" title="Export Chat">
+                            <button class="chatbot-action-btn" id="exportPDF" title="Download as PDF">
+                                <i class="fas fa-file-pdf"></i>
+                            </button>
+                            <button class="chatbot-action-btn" id="exportChat" title="Export Chat JSON">
                                 <i class="fas fa-download"></i>
                             </button>
                             <button class="chatbot-close" id="chatbotClose">
@@ -247,6 +548,7 @@ class AngelOrganicsChatbot {
         const langBtn = document.getElementById('languageToggle');
         const voiceBtn = document.getElementById('voiceToggle');
         const exportBtn = document.getElementById('exportChat');
+        const exportPDFBtn = document.getElementById('exportPDF');
         
         toggle.addEventListener('click', () => this.toggleChatbot());
         close.addEventListener('click', () => this.closeChatbot());
@@ -272,6 +574,10 @@ class AngelOrganicsChatbot {
         
         if (exportBtn) {
             exportBtn.addEventListener('click', () => this.exportChat());
+        }
+        
+        if (exportPDFBtn) {
+            exportPDFBtn.addEventListener('click', () => this.exportChatAsPDF());
         }
         
         input.addEventListener('keypress', (e) => {
