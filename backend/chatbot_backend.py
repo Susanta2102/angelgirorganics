@@ -27,6 +27,8 @@ from datetime import datetime
 import logging
 import uuid
 import json
+import time
+from functools import wraps
 
 # Load environment variables
 load_dotenv()
@@ -36,6 +38,50 @@ if not os.getenv('GROQ_API_KEY'):
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Rate Limiting Configuration
+RATE_LIMIT_DELAY = 2.0  # Minimum seconds between requests
+last_request_time = 0
+request_lock = None
+
+def rate_limit_wait():
+    """Enforce rate limiting by waiting between requests"""
+    global last_request_time
+    current_time = time.time()
+    time_since_last = current_time - last_request_time
+    
+    if time_since_last < RATE_LIMIT_DELAY:
+        wait_time = RATE_LIMIT_DELAY - time_since_last
+        logger.info(f"⏳ Rate limiting: waiting {wait_time:.2f}s")
+        time.sleep(wait_time)
+    
+    last_request_time = time.time()
+
+def retry_with_backoff(max_retries=3, initial_delay=5):
+    """Retry decorator with exponential backoff for rate limit errors"""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            delay = initial_delay
+            for attempt in range(max_retries):
+                try:
+                    rate_limit_wait()  # Enforce rate limiting
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    error_msg = str(e).lower()
+                    if 'rate_limit' in error_msg or '429' in error_msg:
+                        if attempt < max_retries - 1:
+                            logger.warning(f"⚠️ Rate limit hit (attempt {attempt + 1}/{max_retries}). Waiting {delay}s...")
+                            time.sleep(delay)
+                            delay *= 2  # Exponential backoff
+                        else:
+                            logger.error(f"❌ Max retries reached. Rate limit still active.")
+                            raise Exception("Rate limit exceeded. Please try again in a few minutes.")
+                    else:
+                        raise e
+            return None
+        return wrapper
+    return decorator
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -49,9 +95,11 @@ if not GROQ_API_KEY:
 # Initialize Groq LLM with LangGraph-compatible settings
 llm = ChatGroq(
     api_key=GROQ_API_KEY,
-    model="llama-3.3-70b-versatile",
+    model="llama-3.1-8b-instant",  # ⚡ 30,000 TPM - Much faster, fewer rate limits!
     temperature=0.7,
-    max_tokens=2048
+    max_tokens=2048,
+    max_retries=2,  # Built-in retry mechanism
+    timeout=30  # Timeout for requests
 )
 
 # ==================== AGENT TOOLS ====================
@@ -496,9 +544,24 @@ def chat():
             "context": conversation.get("context", {})
         }
         
-        # Run the agent
+        # Run the agent with rate limiting and retry
         config = {"configurable": {"thread_id": session_id}}
-        result = agentic_chatbot.invoke(state, config)
+        
+        try:
+            rate_limit_wait()  # Apply rate limiting
+            result = agentic_chatbot.invoke(state, config)
+        except Exception as llm_error:
+            error_msg = str(llm_error).lower()
+            if 'rate_limit' in error_msg or '429' in error_msg:
+                logger.error(f"[Session: {session_id}] Rate limit exceeded")
+                return jsonify({
+                    "response": "I apologize, but I'm currently experiencing high demand. Please wait a moment and try again. Our service will be available shortly! 🙏",
+                    "session_id": session_id,
+                    "error_type": "rate_limit",
+                    "retry_after": 10
+                }), 429
+            else:
+                raise llm_error
         
         # Extract the final AI response
         ai_message = result["messages"][-1].content

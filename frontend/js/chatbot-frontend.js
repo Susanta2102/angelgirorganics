@@ -829,6 +829,20 @@ class AngelOrganicsChatbot {
                 })
             });
             
+            // Handle rate limiting specifically
+            if (response.status === 429) {
+                const errorData = await response.json().catch(() => ({}));
+                const retryAfter = errorData.retry_after || 10;
+                
+                return {
+                    response: errorData.response || 
+                        `⏳ High demand right now! Please wait ${retryAfter} seconds and try again.\n\nOr contact us:\n📱 WhatsApp: +91 8811013758`,
+                    voice_response: "Please wait a moment and try again",
+                    action: null,
+                    isRateLimited: true
+                };
+            }
+            
             if (!response.ok) {
                 throw new Error('API request failed');
             }
