@@ -1,7 +1,11 @@
 /**
  * Angel Organics AI Chatbot
  * Frontend JavaScript with LangChain Backend Integration
+ * Version 2.1 - Agentic with Action Buttons FIX
  */
+
+console.log('🤖 Chatbot v2.1 loaded - Agentic mode enabled WITH BUTTONS');
+console.log('✅ This is the NEW version with button support');
 
 class AngelOrganicsChatbot {
     constructor() {
@@ -17,6 +21,7 @@ class AngelOrganicsChatbot {
         this.synthesis = window.speechSynthesis;
         this.voiceEnabled = false;
         
+        console.log('✅ Chatbot initialized with action button support');
         this.init();
         this.initVoiceRecognition();
     }
@@ -474,15 +479,22 @@ class AngelOrganicsChatbot {
             // Send to backend API
             const responseData = await this.sendToAPI(message);
             
+            console.log('📥 Response from backend:', {
+                hasAction: !!responseData.action,
+                hasButtons: !!responseData.action?.buttons,
+                buttonCount: responseData.action?.buttons?.length || 0
+            });
+            
             // Remove typing indicator
             this.hideTypingIndicator();
             
-            // Add bot response
+            // Add bot response with action data from backend
             this.addMessage({
                 type: 'bot',
                 text: responseData.response,
-                voiceText: responseData.voice_response, // Clean text for voice
-                timestamp: new Date()
+                voiceText: responseData.voice_response || responseData.response,
+                timestamp: new Date(),
+                actionData: responseData.action || null  // Action data comes from backend
             });
             
         } catch (error) {
@@ -522,10 +534,11 @@ class AngelOrganicsChatbot {
                 console.log('Message sentiment:', data.sentiment);
             }
             
-            // Return both response and voice_response
+            // Return response, voice_response, and action data
             return {
                 response: data.response,
-                voice_response: data.voice_response || data.response // Fallback to regular response
+                voice_response: data.voice_response || data.response, // Fallback to regular response
+                action: data.action || null // Include action data from backend
             };
             
         } catch (error) {
@@ -579,6 +592,15 @@ class AngelOrganicsChatbot {
         this.messages.push(message);
         const messagesContainer = document.getElementById('chatbotMessages');
         
+        // Generate action buttons HTML if present
+        let buttonsHTML = '';
+        if (message.actionData && message.actionData.buttons) {
+            console.log('✅ Creating buttons:', message.actionData.buttons.length, 'buttons');
+            buttonsHTML = this.createActionButtons(message.actionData.buttons);
+        } else {
+            console.log('⚠️ No action data:', message.actionData);
+        }
+        
         const messageHTML = `
             <div class="message ${message.type}">
                 <div class="message-avatar">
@@ -586,6 +608,7 @@ class AngelOrganicsChatbot {
                 </div>
                 <div class="message-content">
                     ${message.isHTML ? message.text : this.formatMessage(message.text)}
+                    ${buttonsHTML}
                     <div class="message-time">${this.formatTime(message.timestamp)}</div>
                 </div>
             </div>
@@ -622,6 +645,24 @@ class AngelOrganicsChatbot {
         });
     }
     
+    parseAgenticResponse(response) {
+        // Extract JSON action data from response
+        const jsonMatch = response.match(/\{[\s\S]*?"action"[\s\S]*?\}/);
+        
+        if (jsonMatch) {
+            try {
+                const actionData = JSON.parse(jsonMatch[0]);
+                const cleanText = response.replace(jsonMatch[0], '').trim();
+                console.log('✅ Parsed action:', actionData.action, '| Buttons:', actionData.buttons?.length);
+                return { cleanText, actionData };
+            } catch (e) {
+                console.error('❌ Failed to parse action data:', e);
+            }
+        }
+        
+        return { cleanText: response, actionData: null };
+    }
+    
     showTypingIndicator() {
         this.isTyping = true;
         const messagesContainer = document.getElementById('chatbotMessages');
@@ -646,6 +687,135 @@ class AngelOrganicsChatbot {
         const typingMessage = document.querySelector('.typing-message');
         if (typingMessage) {
             typingMessage.remove();
+        }
+    }
+    
+    handleAgenticActions(response) {
+        try {
+            // Check if response contains JSON with actions
+            const jsonMatch = response.match(/\{[\s\S]*?"action"[\s\S]*?\}/);
+            if (jsonMatch) {
+                const actionData = JSON.parse(jsonMatch[0]);
+                
+                // Remove JSON from displayed response and add action buttons
+                const cleanResponse = response.replace(jsonMatch[0], '').trim();
+                
+                // Create button HTML if buttons exist
+                if (actionData.buttons && actionData.buttons.length > 0) {
+                    const buttonsHTML = this.createActionButtons(actionData.buttons);
+                    
+                    // Add message with buttons
+                    setTimeout(() => {
+                        const messagesContainer = document.getElementById('chatbotMessages');
+                        const lastMessage = messagesContainer.lastElementChild;
+                        if (lastMessage) {
+                            const contentDiv = lastMessage.querySelector('.message-content');
+                            if (contentDiv && !contentDiv.querySelector('.action-buttons')) {
+                                contentDiv.insertAdjacentHTML('afterbegin', `
+                                    <div class="action-message">${actionData.message || ''}</div>
+                                    ${buttonsHTML}
+                                `);
+                            }
+                        }
+                    }, 100);
+                }
+                
+                // Handle automatic actions
+                if (actionData.action === 'show_gallery') {
+                    // Auto-scroll will be triggered by button click
+                }
+                
+                if (actionData.action === 'show_location') {
+                    // Auto-scroll will be triggered by button click
+                }
+            }
+        } catch (e) {
+            console.debug('No agentic actions in response', e);
+        }
+    }
+    
+    createActionButtons(buttons) {
+        const buttonsHTML = buttons.map(btn => {
+            const action = btn.action || 'default';
+            const url = btn.url || '#';
+            const text = btn.text || 'Click';
+            const query = btn.query || '';
+            
+            return `<button class="action-btn" onclick="angelChatbot.handleButtonClick('${action}', '${url}', '${query}')">${text}</button>`;
+        }).join('');
+        
+        return `<div class="action-buttons">${buttonsHTML}</div>`;
+    }
+    
+    handleButtonClick(action, url, query) {
+        console.log('Button clicked:', action, url, query);
+        
+        switch(action) {
+            case 'scroll_to_gallery':
+                const gallerySection = document.querySelector('.gallery-section') || 
+                                     document.querySelector('[class*="gallery"]') ||
+                                     document.querySelector('h2:contains("Gallery")');
+                if (gallerySection) {
+                    gallerySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    this.highlightSection(gallerySection);
+                }
+                break;
+                
+            case 'scroll_to_map':
+                const mapSection = document.querySelector('#location') || 
+                                  document.querySelector('.map-section') ||
+                                  document.querySelector('iframe[src*="maps"]');
+                if (mapSection) {
+                    mapSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    this.highlightSection(mapSection.closest('section') || mapSection);
+                }
+                break;
+                
+            case 'open_url':
+            case 'open_whatsapp':
+            case 'call':
+            case 'whatsapp':
+                if (url && url !== '#') {
+                    window.open(url, '_blank');
+                }
+                break;
+                
+            case 'product':
+                if (query) {
+                    document.getElementById('chatbotInput').value = `Tell me about ${query}`;
+                    this.sendMessage();
+                }
+                break;
+                
+            case 'calculate':
+                document.getElementById('chatbotInput').value = 'How do I calculate the price?';
+                this.sendMessage();
+                break;
+                
+            case 'show_all_products':
+                document.getElementById('chatbotInput').value = 'Show me all products';
+                this.sendMessage();
+                break;
+                
+            case 'order':
+                document.getElementById('chatbotInput').value = `I want to order ${query}`;
+                this.sendMessage();
+                break;
+                
+            default:
+                console.log('Unknown action:', action);
+        }
+    }
+    
+    highlightSection(element) {
+        if (element) {
+            element.style.transition = 'all 0.5s ease';
+            element.style.backgroundColor = 'rgba(46, 125, 50, 0.15)';
+            element.style.boxShadow = '0 0 20px rgba(46, 125, 50, 0.3)';
+            setTimeout(() => {
+                element.style.backgroundColor = '';
+                element.style.boxShadow = '';
+            }, 2000);
         }
     }
     

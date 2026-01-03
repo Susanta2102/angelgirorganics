@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Action Buttons</title>
+    <style>
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(40, 167, 69, 0.4);
+        }
+
+        .message {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 400px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Action Buttons</h1>
+    
+    <div class="message">
+        <p>Here's our farm gallery!</p>
+        <div class="action-buttons">
+            <button class="action-btn" onclick="alert('View Gallery clicked!')">📸 View Gallery</button>
+            <button class="action-btn" onclick="alert('See Cows clicked!')">🐄 See Our Gir Cows</button>
+            <button class="action-btn" onclick="alert('Contact clicked!')">📞 Contact Us</button>
+        </div>
+    </div>
+
+    <script>
+        console.log('✅ Test page loaded - buttons should be visible above');
+    </script>
+</body>
+</html>

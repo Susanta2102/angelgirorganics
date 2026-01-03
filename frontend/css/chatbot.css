@@ -435,6 +435,62 @@
     box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
+/* Action Buttons for Agentic Chatbot */
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.action-btn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(40, 167, 69, 0.4);
+    background: linear-gradient(135deg, #20c997, #28a745);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+.action-message {
+    font-weight: 600;
+    color: #28a745;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+/* Highlight animation for scrolled sections */
+@keyframes sectionHighlight {
+    0% {
+        box-shadow: 0 0 0 rgba(46, 125, 50, 0);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(46, 125, 50, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(46, 125, 50, 0);
+    }
+}
+
 /* Product Gallery Styles */
 .product-gallery {
     display: grid;
