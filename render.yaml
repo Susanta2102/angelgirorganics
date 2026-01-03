@@ -4,12 +4,10 @@ services:
     name: angelorganics-backend
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: cd backend && gunicorn chatbot_backend:app --bind 0.0.0.0:$PORT
+    startCommand: cd backend && gunicorn chatbot_backend:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120
     envVars:
       - key: GROQ_API_KEY
         sync: false
-      - key: PYTHON_VERSION
-        value: 3.11.0
     
   # Frontend Service (Static Site)
   - type: web
