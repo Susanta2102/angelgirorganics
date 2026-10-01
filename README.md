@@ -2,16 +2,16 @@
 
 <div align="center">
 
-![Angel Organics Banner](https://img.shields.io/badge/Angel-Organics-green?style=for-the-badge&logo=leaf)
-![AI Powered](https://img.shields.io/badge/AI-Powered-blue?style=for-the-badge&logo=robot)
-![LangGraph](https://img.shields.io/badge/LangGraph-Agentic_AI-purple?style=for-the-badge)
-![100% Organic](https://img.shields.io/badge/100%25-Organic-success?style=for-the-badge)
+![Angel Organics](https://img.shields.io/badge/Angel-Organics-1f4d2b?style=for-the-badge&logo=leaf)
+![Agentic AI](https://img.shields.io/badge/Agentic_AI-LangGraph-purple?style=for-the-badge)
+![Groq](https://img.shields.io/badge/LLM-Groq-orange?style=for-the-badge)
+![PWA](https://img.shields.io/badge/PWA-Installable-5A0FC8?style=for-the-badge&logo=pwa)
 
 **Premium A2 Milk & Organic Dairy Products from Ajmer, Rajasthan**
 
-**Powered by Advanced Agentic AI with LangGraph + Groq Llama-3.3-70B**
+**Full-stack website with an agentic AI assistant that can act on the page: build your bill, send your order on WhatsApp, and guide you around the site.**
 
-[🌐 Live Website](https://angelgirorganics.onrender.com) | [📱 Instagram](https://instagram.com/angelorganic_ajmer) | [📞 +91 8811013758](#contact)
+[🌐 Live Website](https://angelgirorganics.onrender.com) · [🤖 Backend Health](https://angel-organics-backend.onrender.com/api/health) · [📱 Instagram](https://instagram.com/angelorganic_ajmer) · [📞 +91 8811013758](tel:+918811013758)
 
 </div>
 
@@ -19,727 +19,293 @@
 
 ## 📖 About Angel Organics
 
-Angel Organics is a **premium Gir cow dairy farm** located in **Ajmer, Rajasthan**, dedicated to providing 100% organic, chemical-free dairy products. Under the expert supervision of **Dr. Sunil K Rai** (Veterinary Surgeon with 20+ years experience), we maintain a herd of **20 pure Gir cows**, producing **100 liters of fresh A2 milk daily** using traditional Vedic farming methods.
+Angel Organics is a Gir cow dairy farm in **Arjunpura Jageer, Ajmer, Rajasthan**. Dr Sunil Rai personally oversees the health and well-being of every cow and calf. Our indigenous Gir cows naturally produce **100% A2 milk**, with zero hormones, antibiotics, or artificial additives.
 
-### 🌟 What Makes Us Special
+> *शुद्धता हमारा वादा है… आपसे। क्योंकि जो हमारे बच्चे के लिए सही नहीं, वो आपके बच्चे के लिए भी नहीं..*
 
-- ✅ **Pure A2 Milk** - Easy to digest, rich in nutrients, lactose-friendly
-- ✅ **100% Organic** - Zero chemicals, hormones, or preservatives
-- ✅ **Traditional Methods** - Bilona ghee, hand-churned butter
-- ✅ **Expert Care** - Supervised by Dr. Sunil K Rai (BVSc & AH)
-- ✅ **Same-Day Delivery** - Fresh products delivered within 6 hours of milking
-- ✅ **Ethical Farming** - Humane treatment, free-grazing cows
-- ✅ **Farm Visits Welcome** - See our operations (7-9 AM best time)
+| 🐄 Premium Gir Cows | 🥛 Liters Daily Production | 👨‍👩‍👧 Happy Families |
+|:---:|:---:|:---:|
+| **20+** | **100+** | **60+** |
 
----
+### 🥛 Products
 
-## 🥛 Our Products
+| Product | Price | Highlights |
+|---------|-------|------------|
+| **Fresh Gir Cow A2 Milk** | ₹75 per liter | 100% A2 protein, daily fresh, no preservatives |
+| **Golden A2 Ghee** | ₹2500 per kg / ₹1300 for 500gm | Bilona method, pure A2 ghee |
+| **Fresh Butter** | ₹1200 per kg | Farm fresh, creamy texture, natural taste |
+| **Probiotic Buttermilk** | ₹30 per liter | Rich probiotics, digestive health |
+| **Thick Curd** | ₹100 per kg | Live cultures, thick & creamy |
 
-| Product | Price | Features |
-|---------|-------|----------|
-| **🥛 Fresh Gir Cow A2 Milk** | ₹75/liter | Delivered within 6 hours, pure & organic |
-| **✨ Golden A2 Ghee** | ₹2,500/kg or ₹1,300/500g | Traditional bilona method, hand-churned |
-| **🧈 Fresh Butter** | ₹1,200/kg | No preservatives, rich flavor |
-| **🥛 Probiotic Buttermilk** | ₹30/liter | Aids digestion, summer coolant |
-| **🍯 Thick Curd** | ₹100/kg | Live cultures, protein-rich |
-
-### 🎁 Special Offers
-- 🎯 **5% bulk discount** on orders ≥ ₹2,000
-- 🚚 **FREE delivery** across Ajmer city
-- ⏰ **Morning delivery** (7-10 AM) & **Evening delivery** (5-8 PM)
-- 🎁 **First order special:** FREE 50g ghee sample + recipe booklet
+🚚 **FREE delivery** on all orders · 🎉 **5% bulk discount** on orders above ₹2000 · ⏰ **Open daily** 6:00 AM - 8:00 PM
 
 ---
 
-## 🤖 Revolutionary Agentic AI Chatbot
+## ✨ Features
 
-Our website features a **state-of-the-art Agentic AI Chatbot** built with cutting-edge technology that can **autonomously reason, plan, and take actions** to help customers.
+### 🤖 Agentic AI Assistant
+- **Acts on the website, not just chats**: *"add 2 liters milk and 500g ghee to my bill"* adds them to the Bill Calculator; *"send my order"* opens WhatsApp with the full bill; *"show me reviews"* scrolls the page there.
+- **Knows the customer's bill**: the current cart is sent with every message, so the agent can answer *"what's in my bill?"*.
+- **Grounded answers**: only states facts from the business data and tools (prices, products, real reviews quoted verbatim); suggests WhatsApp/call instead of guessing.
+- **Bilingual** English / Hindi, **voice input & output** (Web Speech API).
+- **Markdown replies** rendered with [marked](https://github.com/markedjs/marked) and sanitised by [DOMPurify](https://github.com/cure53/DOMPurify).
+- **Export chat** to PDF or JSON.
+- **Offline fallback**: if the server is asleep, the chatbot still answers common questions from website data.
 
-### 🧠 Technology Stack
+### 🛒 Website
+- **Add to Bill** on every product card (with 1 kg / 500 g ghee option), shared with the **Bill Calculator**.
+- Per-item quantity steppers, live **bulk-discount progress bar**, cart saved across visits.
+- **Send Bill to WhatsApp**, Print Bill, Copy Bill; Order Request Form that can attach bill items.
+- **"Open now" badge** from working hours (India time).
+- Farm **gallery** with swipe/keyboard lightbox, **review slider**, farm videos, Google Map with share location.
+- **Installable app (PWA)** with offline support and an "Install App" button.
+- Responsive, mobile-first, accessible design; lazy-loaded media; no heavy UI frameworks.
 
-#### **Backend (Agentic AI)**
-- **🔗 LangGraph** - Advanced agentic workflow framework
-- **🚀 Groq API** - Lightning-fast LLM inference (Llama-3.3-70B-Versatile)
-- **🐍 Python + Flask** - RESTful API backend
-- **💾 MemorySaver** - Persistent conversation memory across sessions
-- **🛠️ Tool Binding** - 7 autonomous tools for intelligent actions
+---
 
-#### **Frontend**
-- **⚡ Vanilla JavaScript** - Fast, lightweight, no frameworks
-- **🎨 Modern CSS3** - Gradient effects, animations, glassmorphism
-- **📱 Responsive Design** - Mobile-first, works on all devices
-- **🗣️ Web Speech API** - Voice input/output support
-- **🌐 Multi-language** - English/Hindi support
+## 🏗️ Architecture
 
-### ✨ Agentic AI Features
-
-#### **🎯 Autonomous Intelligence**
-The chatbot can **think, plan, and act** independently to solve customer needs:
-
-1. **🧠 Reasoning & Planning**
-   - Understands customer intent beyond keywords
-   - Plans multi-step solutions autonomously
-   - Adapts responses based on conversation context
-
-2. **🛠️ 7 Autonomous Tools**
-   - `get_product_info` - Detailed product information with pricing
-   - `get_farm_location` - Interactive map with directions
-   - `calculate_order_total` - Bill calculation with discounts
-   - `get_health_benefits` - A2 milk health advantages
-   - `create_whatsapp_order` - Direct WhatsApp order generation
-   - `show_gallery` - Farm photos and product gallery
-   - `show_all_products` - Complete product catalog
-
-3. **💬 Conversational Memory**
-   - Remembers entire conversation history
-   - Understands context from previous messages
-   - Provides personalized recommendations
-
-4. **🎭 Intelligent Actions**
-   - Automatically scrolls to relevant page sections
-   - Opens interactive maps and galleries
-   - Generates WhatsApp orders with formatted bills
-   - Provides location sharing and directions
-
-#### **🎤 Voice & Language**
-- **Voice Input** - Speak your questions naturally
-- **Voice Output** - Hear responses read aloud
-- **Bilingual** - Switch between English (🇬🇧) and Hindi (🇮🇳)
-- **Smart TTS** - Emoji-free speech for clarity
-
-#### **📄 Export & Sharing**
-- **PDF Export** - Download professional chat transcripts
-- **JSON Export** - Save conversation data
-- **Professional Layout** - Branded PDF with timestamps
-- **Contact Info** - All details included in exports
-
-#### **🎨 User Experience**
-- **Real-time Typing** - See AI thinking
-- **Action Buttons** - Quick access to common tasks
-- **Smooth Animations** - Premium feel
-- **Dark/Light Compatible** - Works in any theme
-
-### 🔧 How the Agentic System Works
-
-```
-User Query → LangGraph Agent → Reasoning Engine
-                 ↓
-         Tool Selection & Execution
-                 ↓
-    [7 Specialized Tools Available]
-                 ↓
-         Action Synthesis → Response
-                 ↓
-    Frontend Receives Action Data
-                 ↓
-   Execute Action (scroll/open/share)
-                 ↓
-         Display to User
+```mermaid
+flowchart LR
+    U[Customer] --> W[Website<br/>HTML · CSS · JS · PWA]
+    W -- "message + language + current bill" --> API[Flask API<br/>/api/chat]
+    API --> G[LangGraph agent]
+    G <--> LLM[Groq LLM<br/>gpt-oss / Llama / Qwen]
+    G <--> T[Tools<br/>products · bill · location · reviews · hours]
+    API -- "reply + action payload" --> W
+    W -- "executes action" --> A[Add to bill · Open WhatsApp · Scroll to section]
 ```
 
-**Example Flow:**
-1. User: "Show me your farm location"
-2. Agent **reasons**: Need to share location
-3. Agent **calls tool**: `get_farm_location()`
-4. Tool **returns**: Map embed + buttons + directions
-5. Agent **responds**: Conversationally with action data
-6. Frontend **executes**: Opens interactive map, adds share buttons
-7. User **sees**: Beautiful map with Get Directions button
+**How an agentic turn works**
+
+1. The browser sends the message, chosen language and the current bill to `/api/chat`.
+2. The LangGraph agent (ReAct-style loop with checkpointed memory per session) decides whether to answer directly or call a tool.
+3. Tools return JSON, including an `action` payload (e.g. `add_to_cart` with items).
+4. The API returns the reply plus the action; the chatbot carries it out through `window.AngelSite` (a small API exposed by `site.js`) and shows what it did.
+
+### 🛠️ Agent tools
+
+| Tool | What it does |
+|------|-------------|
+| `add_to_bill` | Adds products to the website bill (`milk:2,ghee500:1`) |
+| `send_bill_on_whatsapp` | Opens WhatsApp with the customer's current bill |
+| `open_website_section` | Scrolls to products, gallery, calculator, reviews, contact, location |
+| `check_farm_open_now` | Open/closed status from working hours (India time) |
+| `get_customer_reviews` | Real customer reviews from the website, verbatim |
+| `get_product_info` | Product details and price (understands dahi, chaas, makhan, doodh) |
+| `show_all_products` | Full product list with prices |
+| `calculate_order_total` | Bill total with the 5% bulk discount |
+| `create_whatsapp_order` | WhatsApp order link for given order details |
+| `get_farm_location` | Address, hours, directions and map |
+| `get_health_benefits` | A2 milk benefits by topic |
+| `show_gallery` | Points the customer to the farm photo gallery |
+
+### 🧠 Model selection
+At startup the backend asks Groq which models the API key can use and picks the first available from this list of open-weight, tool-calling models:
+
+`openai/gpt-oss-20b` → `openai/gpt-oss-120b` → `qwen/qwen3.8-27b` → `meta-llama/llama-4-scout-17b-16e-instruct` → `qwen/qwen3-32b` → `llama-3.3-70b-versatile` → `llama-3.1-8b-instant`
+
+Set `GROQ_MODEL` to force a specific model. The active model is shown at `/api/health`.
 
 ---
 
-## 🏗️ Project Structure
+## 📁 Project Structure
 
 ```
 angelgirorganics/
-├── 📁 backend/                    # Agentic AI Backend
-│   ├── chatbot_backend.py         # Main LangGraph agent (ACTIVE)
-│   ├── agentic_chatbot.py         # Development version
-│   ├── chatbot.py                 # Legacy simple chatbot
-│   ├── requirements.txt           # Python dependencies
-│   ├── requirements_agentic.txt   # LangGraph-specific packages
-│   ├── setup_agentic.sh           # Quick setup script
-│   ├── Procfile                   # Render deployment config
-│   └── .env                       # API keys (GROQ_API_KEY)
+├── backend/
+│   ├── chatbot_backend.py      # Flask API + LangGraph agent (active)
+│   ├── requirements.txt        # Python dependencies
+│   └── Procfile                # Gunicorn start command
 │
-├── 📁 frontend/                   # Website Frontend
-│   ├── index.html                 # Main website (4600+ lines)
-│   ├── test-chatbot.html          # Chatbot testing page
-│   ├── test-buttons.html          # Button testing page
-│   │
-│   ├── 📁 css/                    # Stylesheets
-│   │   ├── style.css              # Main website styles
-│   │   ├── chatbot.css            # Chatbot UI styles
-│   │   ├── professional-style.css # Premium design system
-│   │   └── premium-effects.css    # Advanced animations
-│   │
-│   └── 📁 js/                     # JavaScript
-│       ├── script.js              # Website interactions
-│       ├── chatbot-frontend.js    # Chatbot UI logic (v2.4)
-│       ├── api-config.js          # API endpoint configuration
-│       ├── enhance.js             # UI enhancements
-│       └── premium-effects.js     # Advanced effects
+├── frontend/                   # Static site (Render publish directory)
+│   ├── index.html              # Website
+│   ├── manifest.webmanifest    # PWA manifest
+│   ├── sw.js                   # Service worker (offline support)
+│   ├── css/
+│   │   ├── site.css            # Website styles
+│   │   └── chatbot.css         # Chatbot styles
+│   ├── js/
+│   │   ├── site.js             # Bill calculator, gallery, PWA, window.AngelSite API
+│   │   ├── chatbot-frontend.js # Chatbot UI + agent action handling
+│   │   ├── api-config.js       # Backend URL (local vs production)
+│   │   └── vendor/             # marked, DOMPurify (self-hosted)
+│   └── assets/
+│       ├── images/             # Product & farm photos, chatbot avatar
+│       ├── icons/              # App icons
+│       └── videos/             # Farm videos
 │
-├── 📁 config/                     # Configuration Files
-│   ├── .env                       # Environment variables
-│   └── render.yaml                # Render platform config
-│
-├── 📁 docs/                       # Documentation
-│   ├── CHATBOT_FEATURES.md        # Chatbot capabilities
-│   ├── DEPLOYMENT-GUIDE.md        # Deployment instructions
-│   ├── CHATBOT-SETUP.md           # Setup guide
-│   └── README_CHATBOT.md          # Chatbot documentation
-│
-├── 📁 scripts/                    # Utility Scripts
-│   ├── setup-chatbot.sh           # Chatbot setup
-│   ├── start-chatbot.sh           # Start backend server
-│   ├── check-chatbot.sh           # Health check
-│   └── qr.py                      # QR code generator
-│
-├── 📁 assets/                     # Media Assets
-│   ├── 📁 images/                 # Product images
-│   └── 📁 videos/                 # Farm videos
-│
-├── 📁 posters/                    # LaTeX Posters
-│   ├── angel_organics_poster.tex
-│   └── angel_organics_poster_hindi.tex
-│
-├── .python-version                # Python 3.11.9 (for Render)
-├── runtime.txt                    # Python version specification
-├── render.yaml                    # Render deployment config
-├── requirements.txt               # Root dependencies
-└── README.md                      # This file
+├── config/.env.example         # Environment variable template
+├── docs/                       # Older guides and notes
+├── posters/                    # LaTeX posters (English & Hindi)
+├── scripts/                    # Utility scripts
+├── render.yaml                 # Render blueprint (backend + frontend)
+├── requirements.txt            # Points to backend/requirements.txt
+└── runtime.txt                 # Python version for Render
 ```
+
+> Older files (`backend/chatbot.py`, `agentic_chatbot.py`, `chatbot_backend_old.py`, `frontend/css/style.css`, `frontend/js/script.js`, etc.) are not used by the live site.
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+- Python 3.11+
+- A free Groq API key: [console.groq.com/keys](https://console.groq.com/keys)
 
-- **Python 3.11+** (3.11.9 recommended for deployment)
-- **Node.js** (optional, for development tools)
-- **Groq API Key** ([Get free key](https://console.groq.com))
-
-### 🔧 Local Development Setup
-
-#### 1️⃣ Clone the Repository
+### 1. Clone
 ```bash
 git clone https://github.com/Susanta2102/angelgirorganics.git
 cd angelgirorganics
 ```
 
-#### 2️⃣ Backend Setup (Agentic AI)
+### 2. Backend
 ```bash
 cd backend
-
-# Create virtual environment
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
+source venv/bin/activate          # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-
-# Create .env file
-echo "GROQ_API_KEY=your_groq_api_key_here" > .env
-
-# Start the backend server
-python chatbot_backend.py
+cp ../config/.env.example .env    # then add your GROQ_API_KEY
+python chatbot_backend.py         # http://localhost:5000
 ```
 
-Server will start at `http://localhost:5000`
-
-#### 3️⃣ Frontend Setup
+### 3. Frontend
 ```bash
-cd ../frontend
-
-# Open in browser (choose one method)
-# Method 1: Python Simple Server
-python3 -m http.server 8000
-
-# Method 2: Node.js
-npx http-server -p 8000
-
-# Method 3: VS Code Live Server extension
-# Right-click index.html → "Open with Live Server"
+cd frontend
+python3 -m http.server 8000       # http://localhost:8000
 ```
+On `localhost` the chatbot automatically talks to `http://localhost:5000` (see `frontend/js/api-config.js`).
 
-Website will open at `http://localhost:8000`
-
-#### 4️⃣ Test the Chatbot
-1. Open `http://localhost:8000`
-2. Click the chatbot icon (💬) in bottom-right
-3. Try: "Show me products", "Farm location", "Health benefits"
+### 4. Try the agent
+- "add 2 liters milk and a 500g ghee to my bill"
+- "what's in my bill?" → "send it on WhatsApp"
+- "are you open now?"
+- "show me customer reviews"
+- "buttermilk price" / "dahi kitne ka hai?"
 
 ---
 
-## 🌐 Deployment (Render Platform)
+## ⚙️ Configuration
 
-This project is deployed on **Render** with two separate services for optimal performance.
+| Variable | Required | Description |
+|----------|:---:|-------------|
+| `GROQ_API_KEY` | ✅ | Groq API key |
+| `GROQ_MODEL` | | Force a model instead of automatic selection |
+| `PORT` | | Port for local runs (default `5000`) |
+| `FLASK_ENV` | | Set to `development` for debug mode locally |
 
-### 📋 Deployment Architecture
+---
 
-```
-GitHub Repository (main branch)
-         ↓
-    ┌────┴────┐
-    ↓         ↓
-Backend     Frontend
-Service     Service
-    ↓         ↓
-Python      Static
-Flask       HTML/CSS/JS
-    ↓         ↓
-API         Website
-(:5000)     (served)
-```
+## 🌐 Deployment (Render)
 
-### 🔧 Backend Service (Python)
+Two services from the same GitHub repo; pushes to `main` deploy automatically.
 
-**Service Name:** `angelorganics-backend`  
-**Type:** Web Service  
-**Runtime:** Python 3.11.9  
-**Build Command:** `pip install -r requirements.txt`  
-**Start Command:** `cd backend && gunicorn chatbot_backend:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120`
+**Backend: Web Service (Python)**
+- Build Command: `pip install -r requirements.txt`
+- Start Command:
+  ```
+  cd backend && gunicorn chatbot_backend:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+  ```
+- Environment: `GROQ_API_KEY` (and optionally `GROQ_MODEL`)
+- URL: https://angel-organics-backend.onrender.com
 
-**Environment Variables:**
-```
-GROQ_API_KEY=<your_groq_api_key>
-```
+> Use **one worker** with threads: conversation memory is kept in the process, so multiple workers would each have separate memory and the bot would forget context.
 
-**URL:** `https://angel-organics-backend.onrender.com`
+**Frontend: Static Site**
+- Publish Directory: `frontend`
+- Build Command: none
+- URL: https://angelgirorganics.onrender.com
 
-### 🌐 Frontend Service (Static Site)
+If you change the backend URL, update `frontend/js/api-config.js`.
 
-**Service Name:** `angelorganics-frontend`  
-**Type:** Static Site  
-**Publish Directory:** `frontend`  
-**Build Command:** (none - static files)
+### API
 
-**URL:** `https://angelgirorganics.onrender.com`
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/health` | Status and active model |
+| `POST` | `/api/chat` | `{ message, session_id, language: "en"\|"hi", cart: [{id, quantity}] }` → `{ response, action? }` |
+| `POST` | `/api/export-chat` | Server-side transcript for a session |
+| `GET` | `/tools` | List of agent tools |
 
-### 🚀 Deployment Steps
-
-1. **Fork/Clone this repository**
-2. **Get Groq API Key** from https://console.groq.com
-3. **Create Backend Service on Render:**
-   - Connect GitHub repo
-   - Set Runtime: Python
-   - Root Directory: Leave blank
-   - Build Command: `pip install -r backend/requirements.txt`
-   - Start Command: `cd backend && gunicorn chatbot_backend:app --bind 0.0.0.0:$PORT --workers 2 --timeout 120`
-   - Add Environment Variable: `GROQ_API_KEY`
-   
-4. **Create Frontend Service on Render:**
-   - Connect same GitHub repo
-   - Set Type: Static Site
-   - Publish Directory: `frontend`
-   - Build Command: Leave empty
-   
-5. **Update Frontend API Config:**
-   - Edit `frontend/js/api-config.js`
-   - Set backend URL: `https://angel-organics-backend.onrender.com`
-
-6. **Deploy!** 🎉
-
-### 🔍 Monitoring & Debugging
-
-Check backend logs:
-```bash
-# View real-time logs on Render dashboard
-# Or use Render CLI:
-render logs -t angelorganics-backend
-```
-
-Test API endpoint:
 ```bash
 curl https://angel-organics-backend.onrender.com/api/health
-```
 
----
-
-## 📦 Key Dependencies
-
-### Backend (Python)
-```txt
-flask==3.0.0              # Web framework
-flask-cors==4.0.0         # CORS support
-gunicorn==23.0.0          # Production server
-langgraph==0.2.45         # Agentic AI framework
-langchain==0.3.7          # LLM orchestration
-langchain-groq==0.2.1     # Groq integration
-langchain-core==0.3.21    # Core abstractions
-groq==0.13.0              # Groq API client
-pydantic==2.10.5          # Data validation
-python-dotenv==1.0.0      # Environment variables
-httpx==0.27.2             # Async HTTP client
-```
-
-### Frontend (JavaScript)
-- **Vanilla JavaScript** - No frameworks, pure performance
-- **Web Speech API** - Voice input/output
-- **Fetch API** - HTTP requests to backend
-- **CSS3** - Modern styling with gradients & animations
-
----
-
-## 🎯 Features Showcase
-
-### 1️⃣ Interactive Google Map
-- **Location:** Angel Farm House, Arjunpura Jageer, Ajmer
-- **Features:**
-  - Full embedded Google Maps
-  - Get Directions button
-  - Share Location functionality
-  - Copy location link
-  - Visible on website homepage
-
-### 2️⃣ Bill Calculator
-- Add products with quantities
-- Automatic 5% discount on ₹2000+
-- FREE delivery included
-- Export to PDF
-- Send via WhatsApp
-
-### 3️⃣ AI Chatbot Actions
-```javascript
-// Example: Show farm location
-User: "show me location"
-  ↓
-Agent calls: get_farm_location()
-  ↓
-Returns: {
-  action: "show_location",
-  buttons: [
-    { text: "🗺️ View on Map", action: "scroll_to_map" },
-    { text: "📍 Get Directions", action: "open_directions" },
-    { text: "📤 Share Location", action: "share_location" }
-  ]
-}
-  ↓
-Frontend: Scrolls to map section + adds interactive buttons
-```
-
-### 4️⃣ WhatsApp Integration
-- Direct order placement
-- Formatted order messages
-- Bill details included
-- One-click to WhatsApp
-
-### 5️⃣ Product Gallery
-- 37 high-quality images
-- Farm photos
-- Gir cow images
-- Product showcases
-- Lightbox view
-
----
-
-## 🧪 Testing
-
-### Backend API Tests
-```bash
-cd backend
-
-# Test health endpoint
-curl http://localhost:5000/api/health
-
-# Test chat endpoint
 curl -X POST http://localhost:5000/api/chat \
   -H "Content-Type: application/json" \
-  -d '{"message": "show products", "session_id": "test123"}'
-```
-
-### Frontend Tests
-1. Open `frontend/test-chatbot.html` for chatbot testing
-2. Open `frontend/test-buttons.html` for action button testing
-3. Use browser dev tools for debugging
-
-### Chatbot Test Queries
-Try these to test all features:
-- ✅ "show me products"
-- ✅ "farm location"
-- ✅ "health benefits of a2 milk"
-- ✅ "calculate bill for 2L milk and 500g ghee"
-- ✅ "show photos"
-- ✅ "how to order"
-- ✅ "price list"
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how:
-
-1. **Fork the repository**
-2. **Create a feature branch:** `git checkout -b feature/AmazingFeature`
-3. **Commit changes:** `git commit -m 'Add AmazingFeature'`
-4. **Push to branch:** `git push origin feature/AmazingFeature`
-5. **Open Pull Request**
-
-### Development Guidelines
-- Follow existing code style
-- Add comments for complex logic
-- Test before submitting PR
-- Update documentation if needed
-
----
-
-## 📄 License
-
-This project is **proprietary software** owned by Angel Organics.  
-© 2024-2026 Angel Organics. All rights reserved.
-
----
-
-## 📞 Contact & Support
-
-### 🏢 Business Inquiries
-- **Phone/WhatsApp:** +91 8811013758
-- **Email:** drsunilkrai1975@gmail.com
-- **Instagram:** [@angelorganic_ajmer](https://instagram.com/angelorganic_ajmer)
-
-### 📍 Visit Our Farm
-**Angel Farm House**  
-Arjunpura Jageer, Ajmer  
-Rajasthan 305203, India
-
-**Best Visiting Time:** 7-9 AM (Milking time)  
-**Directions:** [Google Maps](https://maps.app.goo.gl/293WBoybHLjSEcer7)
-
-### 👨‍💻 Technical Support
-For technical issues or chatbot queries:
-- Open an issue on GitHub
-- Contact via email with "[TECH]" in subject
-
----
-
-## 🙏 Acknowledgments
-
-- **Groq** - For blazing-fast LLM inference
-- **LangChain & LangGraph** - For agentic AI framework
-- **Render** - For reliable cloud hosting
-- **Bootstrap** - For UI components
-- **Font Awesome** - For beautiful icons
-
----
-
-## 🎓 Learn More
-
-### Documentation
-- 📖 [Chatbot Features Guide](docs/CHATBOT_FEATURES.md)
-- 🚀 [Deployment Guide](docs/DEPLOYMENT-GUIDE.md)
-- ⚙️ [Setup Instructions](docs/CHATBOT-SETUP.md)
-- 📚 [API Documentation](docs/README_CHATBOT.md)
-
-### Related Technologies
-- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
-- [Groq API](https://console.groq.com/docs)
-- [LangChain Guide](https://python.langchain.com/docs/get_started/introduction)
-
----
-
-<div align="center">
-
-### ⭐ Star this repo if you found it helpful!
-
-**Built with ❤️ by Angel Organics Team**
-
-*Delivering Pure A2 Milk & Organic Products with AI-Powered Customer Experience*
-
-[🏠 Visit Website](https://angelgirorganics.onrender.com) | [📱 Follow on Instagram](https://instagram.com/angelorganic_ajmer) | [📞 Call Us](tel:+918811013758)
-
----
-
-**Made in India 🇮🇳 | Powered by Agentic AI 🤖 | 100% Organic 🌿**
-
-</div>
-│
-├── 📁 assets/              # Media files
-│   ├── 📁 images/          # Product & farm photos (37 images)
-│   └── 📁 videos/          # Farm videos (2 videos)
-│
-├── 📁 config/              # Configuration files
-│   ├── render.yaml         # Render deployment config
-│   └── .env.example        # Environment template
-│
-├── 📁 docs/                # Documentation
-├── 📁 scripts/             # Utility scripts
-├── 📁 posters/             # LaTeX posters
-└── 📁 tests/               # Test files
+  -d '{"message": "add 2 liters milk to my bill", "session_id": "test123", "cart": []}'
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🩺 Troubleshooting
 
-### Prerequisites
-
-- Python 3.11+
-- Node.js (optional, for serving frontend)
-- Groq API Key ([Get one here](https://console.groq.com/keys))
-
-### Local Development
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/Susanta2102/angelgirorganics.git
-   cd angelgirorganics
-   ```
-
-2. **Setup Backend**
-   ```bash
-   cd backend
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. **Configure Environment**
-   ```bash
-   cp ../config/.env.example .env
-   # Edit .env and add your GROQ_API_KEY
-   ```
-
-4. **Start Backend Server**
-   ```bash
-   python3 chatbot-backend.py
-   # Server runs on http://localhost:5000
-   ```
-
-5. **Open Frontend**
-   ```bash
-   cd ../frontend
-   python3 -m http.server 8000
-   # Visit http://localhost:8000
-   ```
-
-### 🌐 Deploy to Render
-
-1. Push code to GitHub
-2. Connect repository to Render
-3. Add `GROQ_API_KEY` in Render dashboard (Environment Variables)
-4. Deploy automatically!
+| Problem | Fix |
+|---------|-----|
+| Groq logs show `404 model_not_found` | The model was retired. Remove `GROQ_MODEL` to use automatic selection, or set it to a current model from [Groq's model list](https://console.groq.com/docs/models). |
+| First chat reply takes ~1 minute | Free Render services sleep when idle; the first request wakes them. The chatbot waits up to 70 s and falls back to offline answers. |
+| Bot forgets earlier messages | Make sure the Start Command uses `--workers 1 --threads 4`. |
+| Images missing on the live site | All media must live in `frontend/assets/` (only `frontend/` is published). |
+| Old version still showing after deploy | Hard refresh (Ctrl+Shift+R); the service worker refreshes cached files in the background. |
 
 ---
 
 ## 🔧 Tech Stack
 
-### Backend
-- **Framework:** Flask 3.0.0
-- **AI Model:** Groq Llama 3.3 70B Versatile
-- **LangChain:** 0.3.7 (for conversational AI)
-- **CORS:** Flask-CORS 4.0.0
+**Backend:** Python · Flask · Flask-CORS · LangGraph · LangChain · langchain-groq · Groq API · Gunicorn
 
-### Frontend
-- **HTML5** + **CSS3** + **Vanilla JavaScript**
-- **Bootstrap 5.3** (UI framework)
-- **Font Awesome 6.4** (icons)
-- **AOS** (scroll animations)
-- **Speech Recognition API** (voice input)
-- **Speech Synthesis API** (voice output)
+**AI:** Open-weight LLMs on Groq (gpt-oss, Llama, Qwen) · tool calling · checkpointed conversational memory
 
-### Deployment
-- **Backend:** Render (Python web service)
-- **Frontend:** Render (static site)
-- **Version Control:** Git + GitHub
+**Frontend:** HTML5 · CSS3 · Vanilla JavaScript · PWA (Service Worker, Web App Manifest) · Web Speech API · marked · DOMPurify · Font Awesome · Google Fonts
 
----
-
-## 📱 Contact & Social Media
-
-<div align="center">
-
-### 📞 Get in Touch
-
-**Phone/WhatsApp:** [+91 8811013758](https://wa.me/918811013758)
-
-**Email:** [drsunilkrai1975@gmail.com](mailto:drsunilkrai1975@gmail.com)
-
-**Instagram:** [@angelorganic_ajmer](https://instagram.com/angelorganic_ajmer)
-
-**Location:** Ajmer, Rajasthan, India 🇮🇳
-
-</div>
-
----
-
-## 🎯 Key Features
-
-### Website Features
-- 🎨 **Modern Responsive Design** - Works on all devices
-- 🌙 **Dark Mode** - Easy on the eyes
-- ⚡ **Fast Loading** - Optimized performance
-- 🔍 **SEO Optimized** - Better search rankings
-- 📸 **Photo Gallery** - 37+ farm & product images
-- 🎥 **Video Content** - Farm tour videos
-- 📱 **QR Codes** - Quick Instagram access
-
-### AI Chatbot Capabilities
-- Natural conversation in English & Hindi
-- Product information & pricing
-- Health benefits of A2 milk
-- Order assistance & tracking
-- Farm information & history
-- Delivery details
-- Custom product recommendations
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how you can help:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### Development Guidelines
-- Follow existing code style
-- Test thoroughly before submitting
-- Update documentation as needed
-- Keep commits clear and descriptive
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- **Dr. Sunil K Rai** - Founder & Veterinary Expert
-- **Susanta Baidya** - Full Stack AI Developer ([GitHub](https://github.com/Susanta2102) | [LinkedIn](https://www.linkedin.com/in/susanta-baidya-03436628a/))
-- **Groq** - For providing the AI infrastructure
-- **LangChain** - For conversational AI framework
-- **Bootstrap** - For UI components
-- **Font Awesome** - For beautiful icons
-
----
-
-## 📊 Project Stats
-
-![GitHub stars](https://img.shields.io/github/stars/Susanta2102/angelgirorganics?style=social)
-![GitHub forks](https://img.shields.io/github/forks/Susanta2102/angelgirorganics?style=social)
-![GitHub issues](https://img.shields.io/github/issues/Susanta2102/angelgirorganics)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/Susanta2102/angelgirorganics)
+**Deployment:** Render (Python web service + static site) · Git · GitHub
 
 ---
 
 ## 🔮 Future Roadmap
 
-- [ ] Mobile app (Android & iOS)
 - [ ] Online payment integration
 - [ ] Subscription plans
 - [ ] Product reviews & ratings
-- [ ] Delivery tracking with GPS
+- [ ] Delivery tracking
 - [ ] Recipe suggestions
 - [ ] Nutritional calculator
 - [ ] Loyalty rewards program
+- [ ] Persistent chat memory (Redis/database) to support multiple workers
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m "Add amazing feature"`
+4. Push the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+---
+
+## 📞 Contact
+
+- **Phone / WhatsApp:** [+91 8811013758](https://wa.me/918811013758)
+- **Email:** [drsunilkrai1975@gmail.com](mailto:drsunilkrai1975@gmail.com)
+- **Instagram:** [@angelorganic_ajmer](https://instagram.com/angelorganic_ajmer)
+- **Farm:** Angel Farm House, Arjunpura Jageer, Ajmer, Rajasthan 305203, India · [Google Maps](https://maps.app.goo.gl/293WBoybHLjSEcer7)
+- **Hours:** Daily 6:00 AM - 8:00 PM
+
+---
+
+## 🙏 Acknowledgments
+
+- **Dr Sunil Rai**: Founder
+- **Susanta Baidya**: Full Stack AI Developer ([GitHub](https://github.com/Susanta2102) · [LinkedIn](https://www.linkedin.com/in/susanta-baidya-03436628a/))
+- [Groq](https://groq.com) · [LangChain & LangGraph](https://www.langchain.com) · [Render](https://render.com) · [marked](https://github.com/markedjs/marked) · [DOMPurify](https://github.com/cure53/DOMPurify) · [Font Awesome](https://fontawesome.com)
+
+---
+
+## 📄 License
+
+© Angel Organics. All rights reserved.
 
 ---
 
@@ -749,9 +315,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 **Pure Milk, Pure Love, Pure Life** 🐄🥛
 
----
-
-[![Deploy to Render](https://img.shields.io/badge/Deploy-Render-46E3B7?style=for-the-badge&logo=render)](https://render.com)
-[![Star on GitHub](https://img.shields.io/badge/Star-GitHub-yellow?style=for-the-badge&logo=github)](https://github.com/Susanta2102/angelgirorganics)
+![GitHub stars](https://img.shields.io/github/stars/Susanta2102/angelgirorganics?style=social)
+![GitHub forks](https://img.shields.io/github/forks/Susanta2102/angelgirorganics?style=social)
 
 </div>
