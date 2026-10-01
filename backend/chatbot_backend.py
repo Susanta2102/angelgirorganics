@@ -92,10 +92,15 @@ GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 if not GROQ_API_KEY:
     raise ValueError("❌ GROQ_API_KEY not found! Please add it to your .env file")
 
+# Groq retires models over time; override with GROQ_MODEL (e.g. in Render env vars)
+# instead of editing code. Pick a tool-calling model from https://console.groq.com/docs/models
+GROQ_MODEL = os.getenv('GROQ_MODEL', 'llama-3.1-8b-instant')
+logger.info(f"Using Groq model: {GROQ_MODEL}")
+
 # Initialize Groq LLM with LangGraph-compatible settings
 llm = ChatGroq(
     api_key=GROQ_API_KEY,
-    model="llama-3.1-8b-instant",  # ⚡ 30,000 TPM - Much faster, fewer rate limits!
+    model=GROQ_MODEL,
     temperature=0.7,
     max_tokens=2048,
     max_retries=2,  # Built-in retry mechanism
@@ -518,6 +523,7 @@ def health_check():
         "status": "healthy",
         "service": "Angel Organics Agentic Chatbot",
         "framework": "LangGraph + Groq",
+        "model": GROQ_MODEL,
         "timestamp": datetime.now().isoformat()
     })
 
