@@ -19,8 +19,7 @@ const API_CONFIG = {
     
     endpoints: {
         chat: '/api/chat',
-        health: '/api/health',
-        clearHistory: '/api/clear-history'
+        health: '/api/health'
     },
     
     // Get full endpoint URL
@@ -30,10 +29,6 @@ const API_CONFIG = {
     
     getHealthUrl() {
         return this.getApiUrl() + this.endpoints.health;
-    },
-    
-    getClearHistoryUrl() {
-        return this.getApiUrl() + this.endpoints.clearHistory;
     }
 };
 

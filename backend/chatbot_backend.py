@@ -30,6 +30,7 @@ import json
 import time
 import requests
 from functools import wraps
+from urllib.parse import quote
 
 # Load environment variables
 load_dotenv()
@@ -196,16 +197,32 @@ def get_product_info(product_name: str) -> str:
         }
     }
     
-    product_key = product_name.lower().replace(" ", "").replace("a2", "")
-    for key, details in products.items():
-        if key in product_key or product_key in key:
-            details["action"] = "show_product"
-            details["buttons"] = [
-                {"text": f"🛒 Order {details['name']}", "action": "order", "product": details['name']},
-                {"text": "💰 Calculate Price", "action": "calculate"},
-                {"text": "📦 View All Products", "action": "show_all_products"}
-            ]
-            return json.dumps(details, indent=2)
+    aliases = {"chaas": "buttermilk", "chhach": "buttermilk", "lassi": "buttermilk",
+               "dahi": "curd", "yogurt": "curd", "makhan": "butter", "doodh": "milk"}
+    product_key = "".join(product_name.lower().split()).replace("a2", "")
+    for alias, key in aliases.items():
+        product_key = product_key.replace(alias, key)
+    if "ghee" in product_key and "500" in product_key:
+        product_key = "ghee500"
+
+    # Prefer an exact match, then the longest product name found in the query,
+    # so "buttermilk" is not mistaken for "milk"
+    match = product_key if product_key in products else None
+    if not match:
+        found = [key for key in products if key in product_key]
+        match = max(found, key=len) if found else None
+    if not match:
+        match = next((key for key in products if product_key and product_key in key), None)
+
+    if match:
+        details = dict(products[match])
+        details["action"] = "show_product"
+        details["buttons"] = [
+            {"text": f"🛒 Order {details['name']}", "action": "order", "query": details['name']},
+            {"text": "💰 Calculate Price", "action": "calculate"},
+            {"text": "📦 View All Products", "action": "show_all_products"}
+        ]
+        return json.dumps(details, indent=2)
     
     return json.dumps({
         "action": "not_found",
@@ -249,16 +266,26 @@ def calculate_order_total(items: str) -> str:
         total = 0
         breakdown = []
         
+        unknown = []
         for item in item_list:
+            if not item.strip():
+                continue
             product, quantity = item.strip().split(':')
-            product = product.lower().strip()
+            product = "".join(product.lower().split())
             quantity = float(quantity)
             
             if product in prices:
                 price = prices[product]
                 item_total = price * quantity
                 total += item_total
-                breakdown.append(f"{product.title()}: {quantity} x ₹{price} = ₹{item_total}")
+                breakdown.append(f"{product.title()}: {quantity:g} x ₹{price} = ₹{item_total:.2f}")
+            else:
+                unknown.append(product)
+        
+        if total == 0:
+            return "No valid products found. Please use format: 'milk:2,ghee:1' with products: " + ", ".join(prices)
+        if unknown:
+            breakdown.append(f"(Not found: {', '.join(unknown)}. Available: {', '.join(prices)})")
         
         # Apply bulk discount
         discount = 0
@@ -301,8 +328,7 @@ def create_whatsapp_order(order_details: str) -> str:
     """Generate a WhatsApp message link for placing an order."""
     phone = "918811013758"
     message = f"Hi! I want to order from Angel Organics:\n\n{order_details}\n\nPlease confirm availability and delivery time."
-    encoded_message = message.replace(' ', '%20').replace('\n', '%0A')
-    whatsapp_url = f"https://wa.me/{phone}?text={encoded_message}"
+    whatsapp_url = f"https://wa.me/{phone}?text={quote(message)}"
     
     return json.dumps({
         "action": "whatsapp_order",
@@ -340,11 +366,11 @@ def show_all_products() -> str:
         {"name": "Probiotic Buttermilk", "price": "₹30/liter", "emoji": "🥤"}
     ]
     
-    product_list = "\\n".join([f"{p['emoji']} {p['name']} - {p['price']}" for p in products])
+    product_list = "\n".join([f"{p['emoji']} {p['name']} - {p['price']}" for p in products])
     
     return json.dumps({
         "action": "show_products",
-        "message": f"🛒 Our Products:\\n{product_list}",
+        "message": f"🛒 Our Products:\n{product_list}",
         "buttons": [
             {"text": "🥛 Order Milk", "action": "order", "query": "milk"},
             {"text": "🧈 Order Ghee", "action": "order", "query": "ghee"},
@@ -375,6 +401,8 @@ class AgentState(TypedDict):
     context: dict
 
 # ==================== AGENT NODES ====================
+
+MAX_HISTORY_MESSAGES = 20  # recent messages sent to the model on each turn
 
 def call_model(state: AgentState):
     """Call the LLM with tools to generate a response."""
@@ -449,7 +477,19 @@ Response: "Great question! A2 milk contains only A2 beta-casein protein, while r
 
 """
     
-    full_messages = [SystemMessage(content=system_prompt)] + messages
+    if state.get("context", {}).get("language") == "hi":
+        system_prompt += "\n**LANGUAGE:** The customer chose Hindi. Reply in simple Hindi (Devanagari script). Keep prices, phone numbers and product names as they are.\n"
+
+    # Keep the prompt small: send only the recent part of the conversation,
+    # starting at a user message so tool calls and their results stay paired
+    recent = list(messages)
+    if len(recent) > MAX_HISTORY_MESSAGES:
+        start = len(recent) - MAX_HISTORY_MESSAGES
+        while start < len(recent) and not isinstance(recent[start], HumanMessage):
+            start += 1
+        recent = recent[start:]
+
+    full_messages = [SystemMessage(content=system_prompt)] + recent
     
     # Call LLM with tools - it will decide when to use them
     response = llm_with_tools.invoke(full_messages)
@@ -564,9 +604,10 @@ def health_check():
 def chat():
     """Main chat endpoint with agentic capabilities."""
     try:
-        data = request.json
-        user_message = data.get('message', '').strip()
-        session_id = data.get('session_id', str(uuid.uuid4()))
+        data = request.get_json(silent=True) or {}
+        user_message = str(data.get('message') or '').strip()
+        session_id = str(data.get('session_id') or uuid.uuid4())
+        language = 'hi' if data.get('language') == 'hi' else 'en'
         
         if not user_message:
             return jsonify({"error": "Message is required"}), 400
@@ -575,6 +616,7 @@ def chat():
         
         # Get conversation history
         conversation = get_or_create_conversation(session_id)
+        conversation.setdefault("context", {})["language"] = language
         
         # Prepare state
         state = {
@@ -584,7 +626,7 @@ def chat():
         }
         
         # Run the agent with rate limiting and retry
-        config = {"configurable": {"thread_id": session_id}}
+        config = {"configurable": {"thread_id": session_id}, "recursion_limit": 10}
         
         try:
             rate_limit_wait()  # Apply rate limiting
@@ -604,6 +646,9 @@ def chat():
         
         # Extract the final AI response
         ai_message = result["messages"][-1].content
+        if isinstance(ai_message, list):
+            ai_message = "".join(part.get("text", "") if isinstance(part, dict) else str(part) for part in ai_message)
+        ai_message = (ai_message or "").strip()
         
         # Extract tool results - get the LAST tool action (most recent)
         action_data = None
@@ -618,6 +663,13 @@ def chat():
                 except Exception as e:
                     logger.error(f"[Session: {session_id}] Error parsing tool result: {e}")
                     pass
+        
+        # Some models answer a tool call with no text; never send an empty reply
+        if not ai_message:
+            if action_data:
+                ai_message = action_data.get("message") or "Here you go! 👇"
+            else:
+                ai_message = "I'm here to help with our products, prices, orders and farm visits. You can also WhatsApp us at +91 8811013758. 🙏"
         
         # Update conversation history
         conversation["messages"].append({
@@ -659,7 +711,7 @@ def chat():
 def export_chat():
     """Export chat conversation."""
     try:
-        data = request.json
+        data = request.get_json(silent=True) or {}
         session_id = data.get('session_id')
         
         if not session_id or session_id not in conversations:

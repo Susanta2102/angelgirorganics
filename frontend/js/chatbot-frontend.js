@@ -1,11 +1,9 @@
 /**
  * Angel Organics AI Chatbot
  * Frontend JavaScript with LangChain Backend Integration
- * Version 2.1 - Agentic with Action Buttons FIX
+ * Version 2.6
  */
 
-console.log('🤖 Chatbot v2.1 loaded - Agentic mode enabled WITH BUTTONS');
-console.log('✅ This is the NEW version with button support');
 
 class AngelOrganicsChatbot {
     constructor() {
@@ -47,6 +45,13 @@ class AngelOrganicsChatbot {
             this.recognition.onerror = (event) => {
                 console.error('Speech recognition error:', event.error);
                 this.stopListening();
+                if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+                    this.addMessage({
+                        type: 'bot',
+                        text: '🎤 Please allow microphone access in your browser to use voice input.',
+                        timestamp: new Date()
+                    });
+                }
             };
             
             this.recognition.onend = () => {
@@ -69,10 +74,24 @@ class AngelOrganicsChatbot {
     }
     
     startListening() {
-        if (this.recognition && !this.isListening) {
+        if (!this.recognition) {
+            this.addMessage({
+                type: 'bot',
+                text: '🎤 Voice input is not supported in this browser. Please try Chrome, or type your message.',
+                timestamp: new Date()
+            });
+            return;
+        }
+        if (!this.isListening) {
             this.isListening = true;
             this.recognition.lang = this.language === 'hi' ? 'hi-IN' : 'en-US';
-            this.recognition.start();
+            try {
+                this.recognition.start();
+            } catch (err) {
+                console.error('Could not start voice input:', err);
+                this.isListening = false;
+                return;
+            }
             
             const micBtn = document.getElementById('micButton');
             if (micBtn) {
@@ -131,42 +150,35 @@ class AngelOrganicsChatbot {
         });
     }
     
-    async exportChat() {
-        try {
-            const response = await fetch(this.apiEndpoint.replace('/chat', '/export-chat'), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    session_id: this.sessionId
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                // Create downloadable file
-                const blob = new Blob([JSON.stringify(data.messages, null, 2)], 
-                    { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `angel-organics-chat-${Date.now()}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                this.addMessage({
-                    type: 'bot',
-                    text: '✅ Chat history exported successfully!',
-                    timestamp: new Date()
-                });
-            }
-        } catch (error) {
-            console.error('Error exporting chat:', error);
-        }
+    exportChat() {
+        // Built from the messages in this browser, so it works even if the server is asleep
+        const data = {
+            business: 'Angel Organics',
+            exported_at: new Date().toISOString(),
+            session_id: this.sessionId,
+            messages: this.messages
+                .filter(m => !m.isHTML)
+                .map(m => ({
+                    from: m.type === 'user' ? 'Customer' : 'Angel Organics AI',
+                    text: m.text,
+                    time: new Date(m.timestamp).toISOString()
+                }))
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `angel-organics-chat-${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+        this.addMessage({
+            type: 'bot',
+            text: '✅ Chat history exported successfully!',
+            timestamp: new Date()
+        });
     }
     
     async exportChatAsPDF() {
@@ -176,14 +188,22 @@ class AngelOrganicsChatbot {
             
             // Create a new window for printing
             const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+                this.addMessage({
+                    type: 'bot',
+                    text: '⚠️ Please allow pop-ups for this site to download the chat as PDF.',
+                    timestamp: new Date()
+                });
+                return;
+            }
             printWindow.document.write(pdfContent);
             printWindow.document.close();
             
-            // Wait for content to load then print
-            printWindow.onload = function() {
+            // Give the new window a moment to render, then open the print dialog
+            setTimeout(() => {
                 printWindow.focus();
                 printWindow.print();
-            };
+            }, 300);
             
             this.addMessage({
                 type: 'bot',
@@ -210,7 +230,7 @@ class AngelOrganicsChatbot {
         const timeStr = now.toLocaleTimeString('en-IN');
         
         let messagesHTML = '';
-        this.messages.forEach((msg, index) => {
+        this.messages.filter(msg => !msg.isHTML).forEach((msg) => {
             const time = new Date(msg.timestamp).toLocaleTimeString('en-IN', {
                 hour: '2-digit',
                 minute: '2-digit'
@@ -421,7 +441,7 @@ class AngelOrganicsChatbot {
         </div>
         <div class="meta-item">
             <span class="meta-label">Messages:</span>
-            <span class="meta-value">${this.messages.length}</span>
+            <span class="meta-value">${this.messages.filter(m => !m.isHTML).length}</span>
         </div>
         <div class="meta-item">
             <span class="meta-label">Session:</span>
@@ -580,6 +600,15 @@ class AngelOrganicsChatbot {
             exportPDFBtn.addEventListener('click', () => this.exportChatAsPDF());
         }
         
+        document.getElementById('chatbotMessages').addEventListener('click', (e) => {
+            const quick = e.target.closest('[data-quick-reply]');
+            if (quick) return this.handleQuickReply(quick.dataset.quickReply);
+            const order = e.target.closest('[data-order-product]');
+            if (order) return this.quickOrder(order.dataset.orderProduct);
+            const action = e.target.closest('.action-btn');
+            if (action) return this.handleButtonClick(action.dataset.action, action.dataset.url, action.dataset.query);
+        });
+        
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -612,7 +641,7 @@ class AngelOrganicsChatbot {
     showWelcomeMessage() {
         const welcomeMsg = {
             type: 'bot',
-            text: `Namaste! 🙏 Welcome to Angel Organics!\n\nI'm your AI assistant with amazing features:\n\n🎤 Voice Input - Click mic to speak\n🔊 Voice Output - Toggle to hear responses\n🌐 Multi-language - Switch between English & Hindi\n📸 Product Gallery - View products with images\n📦 Order Tracking - Track your orders\n📥 Export Chat - Download conversation\n\nHow can I help you today?`,
+            text: `Namaste! 🙏 Welcome to Angel Organics!\n\nI'm your AI assistant with amazing features:\n\n🎤 Voice Input - Click mic to speak\n🔊 Voice Output - Toggle to hear responses\n🌐 Multi-language - Switch between English & Hindi\n📸 Product Gallery - View products with images\n📥 Export Chat - Download conversation\n\nHow can I help you today?`,
             timestamp: new Date()
         };
         
@@ -631,7 +660,7 @@ class AngelOrganicsChatbot {
             'Check Prices 💰',
             'A2 Benefits 🌟',
             'Place Order 📦',
-            'Track Order 🔍',
+            'Farm Location 📍',
             'Product Gallery 📸'
         ];
         
@@ -639,7 +668,7 @@ class AngelOrganicsChatbot {
         const repliesHTML = `
             <div class="quick-replies">
                 ${quickReplies.map(reply => 
-                    `<button class="quick-reply-btn" onclick="angelChatbot.handleQuickReply('${reply}')">${reply}</button>`
+                    `<button type="button" class="quick-reply-btn" data-quick-reply="${this.escapeHtml(reply)}">${this.escapeHtml(reply)}</button>`
                 ).join('')}
             </div>
         `;
@@ -661,11 +690,6 @@ class AngelOrganicsChatbot {
             return;
         }
         
-        if (text.includes('Track Order')) {
-            this.showOrderTracking();
-            return;
-        }
-        
         // Send as user message
         document.getElementById('chatbotInput').value = text;
         this.sendMessage();
@@ -676,44 +700,44 @@ class AngelOrganicsChatbot {
             {
                 name: 'Fresh A2 Milk',
                 price: '₹75/liter',
-                image: '🥛',
+                image: '../assets/images/11.jpg',
                 description: 'Pure Gir cow milk delivered within 6 hours'
             },
             {
                 name: 'Golden A2 Ghee',
-                price: '₹2500/kg',
-                image: '🧈',
+                price: '₹2500/kg · ₹1300/500g',
+                image: '../assets/images/12.jpg',
                 description: 'Traditional bilona method ghee'
             },
             {
                 name: 'Fresh Butter',
                 price: '₹1200/kg',
-                image: '🧈',
+                image: '../assets/images/35.jpeg',
                 description: 'Hand-churned, no preservatives'
             },
             {
                 name: 'Probiotic Buttermilk',
                 price: '₹30/liter',
-                image: '🥤',
+                image: '../assets/images/36.avif',
                 description: 'Aids digestion naturally'
             },
             {
                 name: 'Thick Curd',
                 price: '₹100/kg',
-                image: '🥣',
+                image: '../assets/images/37.webp',
                 description: 'Live cultures, protein-rich'
             }
         ];
         
-        let galleryHTML = '<div class="product-gallery">';
+        let galleryHTML = '<div class="chat-gallery">';
         products.forEach(product => {
             galleryHTML += `
-                <div class="product-card">
-                    <div class="product-icon">${product.image}</div>
+                <div class="chat-gallery-card">
+                    <img class="chat-gallery-photo" src="${product.image}" alt="${product.name}" loading="lazy">
                     <h4>${product.name}</h4>
-                    <p class="product-desc">${product.description}</p>
-                    <p class="product-price">${product.price}</p>
-                    <button class="order-product-btn" onclick="angelChatbot.quickOrder('${product.name}')">
+                    <p class="chat-gallery-desc">${product.description}</p>
+                    <p class="chat-gallery-price">${product.price}</p>
+                    <button type="button" class="chat-gallery-btn" data-order-product="${product.name}">
                         Order Now
                     </button>
                 </div>
@@ -727,34 +751,6 @@ class AngelOrganicsChatbot {
             timestamp: new Date(),
             isHTML: true
         });
-    }
-    
-    showOrderTracking() {
-        const trackingHTML = `
-            <div class="order-tracking-form">
-                <h4>🔍 Track Your Order</h4>
-                <p>Enter your order ID (e.g., AO-12345678)</p>
-                <div class="tracking-input-group">
-                    <input type="text" id="orderIdInput" placeholder="AO-XXXXXXXX" />
-                    <button onclick="angelChatbot.trackOrder()">Track</button>
-                </div>
-            </div>
-        `;
-        
-        this.addMessage({
-            type: 'bot',
-            text: trackingHTML,
-            timestamp: new Date(),
-            isHTML: true
-        });
-    }
-    
-    async trackOrder() {
-        const orderId = document.getElementById('orderIdInput').value.trim().toUpperCase();
-        if (orderId) {
-            document.getElementById('chatbotInput').value = `Track order ${orderId}`;
-            this.sendMessage();
-        }
     }
     
     quickOrder(productName) {
@@ -817,8 +813,11 @@ class AngelOrganicsChatbot {
     
     async sendToAPI(message) {
         try {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), 70000);
             const response = await fetch(this.apiEndpoint, {
                 method: 'POST',
+                signal: controller.signal,
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -827,7 +826,7 @@ class AngelOrganicsChatbot {
                     session_id: this.sessionId,
                     language: this.language
                 })
-            });
+            }).finally(() => clearTimeout(timer));
             
             // Handle rate limiting specifically
             if (response.status === 429) {
@@ -848,6 +847,9 @@ class AngelOrganicsChatbot {
             }
             
             const data = await response.json();
+            if (!data.response) {
+                throw new Error('Empty response from server');
+            }
             
             // Log sentiment for analytics
             if (data.sentiment) {
@@ -879,33 +881,30 @@ class AngelOrganicsChatbot {
     
     getLocalResponse(message) {
         const msg = message.toLowerCase();
+        const has = (...words) => words.some(w => msg.includes(w));
         
-        // Local fallback responses
-        if (msg.includes('product') || msg.includes('what') || msg.includes('sell')) {
-            return `🥛 **Our Products:**\n\n1. Fresh A2 Desi Cow Milk - ₹100-120/liter\n2. Organic Desi Ghee - ₹800-1000/kg\n3. Fresh Curd/Dahi - ₹80-100/500g\n4. Paneer - ₹300-400/kg\n\nAll 100% pure from Gir & Sahiwal cows! 🐄\n\nWant to order? Contact us on WhatsApp: +91 8811013758`;
+        // Offline fallback - kept in sync with the prices and details on the website
+        if (has('price', 'cost', 'rate', 'kitna', 'product', 'sell', 'milk', 'ghee', 'butter', 'curd', 'dahi', 'buttermilk', 'chaas')) {
+            return `🥛 **Our Products & Prices:**\n\n• Fresh Gir Cow A2 Milk - ₹75 per liter\n• Golden A2 Ghee - ₹2500 per kg / ₹1300 for 500gm\n• Fresh Butter - ₹1200 per kg\n• Probiotic Buttermilk - ₹30 per liter\n• Thick Curd - ₹100 per kg\n\n🚚 FREE delivery on all orders\n🎉 5% bulk discount on orders above ₹2000\n\nUse the Bill Calculator on this page to see your total, or WhatsApp us: +91 8811013758`;
         }
         
-        if (msg.includes('price') || msg.includes('cost')) {
-            return `💰 **Our Pricing:**\n\n• Fresh A2 Milk: ₹100-120/liter\n• Desi Ghee: ₹800-1000/kg\n• Fresh Curd: ₹80-100/500g\n• Paneer: ₹300-400/kg\n\n📱 For bulk orders: +91 8811013758`;
+        if (has('benefit', 'a2', 'health', 'digest')) {
+            return `🌟 **A2 Milk Benefits:**\n\n✅ Superior digestibility - easy on the stomach\n✅ Immunity powerhouse\n✅ Stronger bones\n✅ Enhanced brain function\n✅ Muscle development\n✅ Heart health\n\nOur indigenous Gir cows naturally produce 100% A2 milk, with zero hormones, antibiotics, or artificial additives. 🐄`;
         }
         
-        if (msg.includes('benefit') || msg.includes('a2') || msg.includes('health')) {
-            return `🌟 **A2 Milk Benefits:**\n\n✅ Easier to digest\n✅ Only A2 beta-casein protein\n✅ Reduces inflammation\n✅ Boosts immunity\n✅ Better for lactose-sensitive\n✅ Rich in vitamins & minerals\n✅ No chemicals or preservatives\n\nSupervised by Dr. Sunil K Rai (Veterinary Surgeon)! 👨‍⚕️`;
+        if (has('order', 'buy', 'deliver', 'delivery')) {
+            return `📦 **How to Order:**\n\n1️⃣ Tap "Add to Bill" on any product, then "Send Bill to WhatsApp"\n2️⃣ Or WhatsApp us directly: +91 8811013758\n3️⃣ Or call: +91 8811013758\n\n🚚 FREE delivery on all orders\n🎉 5% bulk discount on orders above ₹2000\n\nMessage us to confirm delivery to your area. 🙏`;
         }
         
-        if (msg.includes('order') || msg.includes('buy')) {
-            return `📦 **Ready to Order?**\n\nContact us now:\n📱 WhatsApp: +91 8811013758\n📧 Email: drsunilkrai1975@gmail.com\n📸 Instagram: @angelgirorganics\n\n🚚 Daily delivery in Delhi NCR\n⏰ Morning delivery: 6-8 AM\n📦 Minimum order: 1 liter`;
+        if (has('location', 'address', 'where', 'visit', 'farm', 'map', 'time', 'hour', 'open')) {
+            return `📍 **Visit Our Farm:**\n\nAngel Farm House\nArjunpura Jageer, Ajmer\nRajasthan 305203, India\n\n⏰ Daily: 6:00 AM - 8:00 PM\n📞 +91 8811013758\n🗺️ Directions: https://maps.app.goo.gl/293WBoybHLjSEcer7`;
         }
         
-        if (msg.includes('delivery') || msg.includes('location')) {
-            return `🚚 **Delivery Information:**\n\n📍 Service Areas: Delhi NCR\n• Delhi\n• Noida\n• Gurgaon\n• Ghaziabad\n• Faridabad\n\n⏰ Delivery Timings:\n• Morning: 6-8 AM (Daily)\n• Evening: On Request\n\n📦 Minimum order: 1 liter\n📱 Contact: +91 8811013758`;
+        if (has('contact', 'phone', 'call', 'whatsapp', 'email', 'instagram', 'owner')) {
+            return `📞 **Contact Angel Organics:**\n\n👨‍🌾 Dr Sunil Rai\n📱 Phone/WhatsApp: +91 8811013758\n📧 Email: drsunilkrai1975@gmail.com\n📸 Instagram: @angelorganic_ajmer\n📍 Arjunpura Jageer, Ajmer, Rajasthan\n\nWe're here to serve you! 🙏`;
         }
         
-        if (msg.includes('contact') || msg.includes('phone')) {
-            return `📞 **Contact Angel Organics:**\n\n👨‍⚕️ Dr. Sunil K Rai (Veterinary Surgeon)\n📱 Phone/WhatsApp: +91 8811013758\n📧 Email: drsunilkrai1975@gmail.com\n📸 Instagram: @angelgirorganics\n\nWe're here to serve you! 🙏`;
-        }
-        
-        return `I'm here to help! Ask me about:\n\n🥛 Products & Prices\n🌟 A2 Milk Benefits\n📦 How to Order\n🚚 Delivery Information\n📞 Contact Details\n\nWhat would you like to know?`;
+        return `I'm here to help! Ask me about:\n\n🥛 Products & Prices\n🌟 A2 Milk Benefits\n📦 How to Order\n📍 Farm Location\n📞 Contact Details\n\nWhat would you like to know?`;
     }
     
     addMessage(message) {
@@ -946,16 +945,10 @@ class AngelOrganicsChatbot {
     
     formatMessage(text) {
         // Convert markdown-style formatting to HTML
-        let formatted = text
+        return this.escapeHtml(text || '')
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
             .replace(/\n/g, '<br>');
-        
-        // Convert product listings to cards if present
-        if (text.includes('₹') && (text.includes('liter') || text.includes('kg'))) {
-            // This is a product listing, could enhance with cards
-        }
-        
-        return formatted;
     }
     
     formatTime(date) {
@@ -1059,9 +1052,10 @@ class AngelOrganicsChatbot {
             const action = btn.action || 'default';
             const url = btn.url || '#';
             const text = btn.text || 'Click';
-            const query = btn.query || '';
+            const query = btn.query || btn.product || '';
+            const esc = (v) => this.escapeHtml(String(v));
             
-            return `<button class="action-btn" onclick="angelChatbot.handleButtonClick('${action}', '${url}', '${query}')">${text}</button>`;
+            return `<button type="button" class="action-btn" data-action="${esc(action)}" data-url="${esc(url)}" data-query="${esc(query)}">${esc(text)}</button>`;
         }).join('');
         
         return `<div class="action-buttons">${buttonsHTML}</div>`;
@@ -1073,8 +1067,7 @@ class AngelOrganicsChatbot {
         switch(action) {
             case 'scroll_to_gallery':
                 const gallerySection = document.querySelector('.gallery-section') || 
-                                     document.querySelector('[class*="gallery"]') ||
-                                     document.querySelector('h2:contains("Gallery")');
+                                     document.querySelector('[class*="gallery"]');
                 if (gallerySection) {
                     gallerySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     this.highlightSection(gallerySection);
@@ -1096,7 +1089,11 @@ class AngelOrganicsChatbot {
             case 'call':
             case 'whatsapp':
                 if (url && url !== '#') {
-                    window.open(url, '_blank');
+                    if (url.startsWith('tel:')) {
+                        window.location.href = url;
+                    } else {
+                        window.open(url, '_blank', 'noopener');
+                    }
                 }
                 break;
                 
@@ -1107,10 +1104,25 @@ class AngelOrganicsChatbot {
                 }
                 break;
                 
-            case 'calculate':
-                document.getElementById('chatbotInput').value = 'How do I calculate the price?';
-                this.sendMessage();
+            case 'calculate': {
+                const calculator = document.getElementById('calculator');
+                if (calculator) {
+                    calculator.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    document.getElementById('chatbotInput').value = 'How do I calculate the price?';
+                    this.sendMessage();
+                }
                 break;
+            }
+            
+            case 'show_contact': {
+                const contact = document.getElementById('contact');
+                if (contact) {
+                    contact.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    this.highlightSection(contact);
+                }
+                break;
+            }
                 
             case 'show_all_products':
                 document.getElementById('chatbotInput').value = 'Show me all products';
@@ -1118,7 +1130,7 @@ class AngelOrganicsChatbot {
                 break;
                 
             case 'order':
-                document.getElementById('chatbotInput').value = `I want to order ${query}`;
+                document.getElementById('chatbotInput').value = query ? `I want to order ${query}` : 'I want to place an order';
                 this.sendMessage();
                 break;
                 
