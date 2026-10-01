@@ -469,6 +469,24 @@
 
     renderCart(false);
 
+    // Public API so the AI assistant can act on the page (agentic actions)
+    window.AngelSite = {
+        products: PRODUCTS,
+        getCart: () => cart.map((i) => ({ id: i.id, quantity: i.quantity })),
+        addToCart: (id, qty) => { if (PRODUCTS[id] && qty > 0) { addToCart(id, qty); return true; } return false; },
+        sendBillOnWhatsApp: () => {
+            if (cart.length === 0) { toast('Your bill is empty. Add some products first!', 'warning'); return false; }
+            openWhatsApp(orderSummaryText());
+            return true;
+        },
+        goTo: (sectionId) => {
+            const el = document.getElementById(sectionId);
+            if (!el) return false;
+            el.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+            return true;
+        }
+    };
+
     /* ---------------- Order request form ---------------- */
     $('#orderForm').addEventListener('submit', function (e) {
         e.preventDefault();
@@ -664,6 +682,29 @@
         if (!sheet.hidden && e.key === 'Escape') closeShareSheet();
         if (nav.classList.contains('open') && e.key === 'Escape') { setMenu(false); menuToggle.focus(); }
     });
+
+    /* ---------------- Installable app (PWA) ---------------- */
+    if ('serviceWorker' in navigator && window.isSecureContext) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch((err) => console.warn('Service worker not registered', err));
+        });
+    }
+    let installPrompt = null;
+    const installBtns = $$('[data-install]');
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        installPrompt = e;
+        installBtns.forEach((b) => { b.hidden = false; });
+    });
+    installBtns.forEach((b) => b.addEventListener('click', async () => {
+        if (!installPrompt) return;
+        installPrompt.prompt();
+        const choice = await installPrompt.userChoice;
+        if (choice.outcome === 'accepted') toast('Angel Organics app installed! 🐄', 'success');
+        installPrompt = null;
+        installBtns.forEach((btn) => { btn.hidden = true; });
+    }));
+    window.addEventListener('appinstalled', () => installBtns.forEach((b) => { b.hidden = true; }));
 
     /* ---------------- Misc ---------------- */
     const yearEl = $('#year');

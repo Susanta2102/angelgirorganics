@@ -548,6 +548,7 @@ textarea { resize: vertical; min-height: 110px; }
 .footer p { display: flex; gap: .6rem; align-items: baseline; word-break: break-word; }
 .footer p i { color: var(--ghee); }
 .brand-footer { margin-bottom: 14px; }
+.footer-install { margin-top: 18px; }
 .social-links { display: flex; gap: 10px; margin-top: 8px; }
 .social-links a, .social-links button { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .08); border: 0; color: #fff; transition: all .2s; }
 .social-links a:hover, .social-links button:hover { background: var(--ghee); color: var(--forest-deep); transform: translateY(-3px); }
@@ -718,4 +719,10 @@ body.menu-open .cart-pill, body.menu-open .floating-actions, body.menu-open .cha
 
 @media print {
     .site-header, .floating-actions, .back-to-top, .cart-pill, .chatbot-widget, .ribbon { display: none !important; }
+}
+
+/* While the chat is open, keep site notifications clear of it */
+body:has(.chatbot-container.active) .toast-stack { right: auto; left: 20px; }
+@media (max-width: 768px) {
+    body:has(.chatbot-container.active) .toast-stack { display: none; }
 }

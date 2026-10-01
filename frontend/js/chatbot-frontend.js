@@ -132,7 +132,7 @@ class AngelOrganicsChatbot {
         this.language = this.language === 'en' ? 'hi' : 'en';
         const langBtn = document.getElementById('languageToggle');
         if (langBtn) {
-            langBtn.textContent = this.language === 'en' ? '🇬🇧 EN' : '🇮🇳 HI';
+            langBtn.textContent = this.language === 'en' ? 'EN' : 'हिं';
         }
         
         // Update recognition language if available
@@ -144,8 +144,8 @@ class AngelOrganicsChatbot {
         this.addMessage({
             type: 'bot',
             text: this.language === 'en' ? 
-                'Language switched to English 🇬🇧' : 
-                'भाषा हिंदी में बदल गई 🇮🇳',
+                'Language switched to English' : 
+                'भाषा हिंदी में बदल गई',
             timestamp: new Date()
         });
     }
@@ -504,7 +504,7 @@ class AngelOrganicsChatbot {
                     <div class="chatbot-header">
                         <div class="chatbot-header-info">
                             <div class="chatbot-avatar">
-                                <img src="../assets/images/chatbot-avatar.jpg" alt="Angel Organics cow" class="avatar-img">
+                                <img src="assets/images/chatbot-avatar.jpg" alt="Angel Organics cow" class="avatar-img">
                             </div>
                             <div class="chatbot-title">
                                 <h3>Angel Organics AI</h3>
@@ -516,7 +516,7 @@ class AngelOrganicsChatbot {
                         </div>
                         <div class="chatbot-actions">
                             <button class="chatbot-action-btn" id="languageToggle" title="Switch Language">
-                                🇬🇧 EN
+                                EN
                             </button>
                             <button class="chatbot-action-btn" id="voiceToggle" title="Toggle Voice">
                                 <i class="fas fa-volume-mute"></i>
@@ -641,7 +641,7 @@ class AngelOrganicsChatbot {
     showWelcomeMessage() {
         const welcomeMsg = {
             type: 'bot',
-            text: `Namaste! 🙏 Welcome to Angel Organics!\n\nI'm your AI assistant with amazing features:\n\n🎤 Voice Input - Click mic to speak\n🔊 Voice Output - Toggle to hear responses\n🌐 Multi-language - Switch between English & Hindi\n📸 Product Gallery - View products with images\n📥 Export Chat - Download conversation\n\nHow can I help you today?`,
+            text: `Namaste! 🙏 Welcome to Angel Organics!\n\nI'm your AI assistant with amazing features:\n\n🛒 Smart Ordering - Say \"add 2 liters milk to my bill\" and I'll do it\n🎤 Voice Input - Click mic to speak\n🔊 Voice Output - Toggle to hear responses\n🌐 Multi-language - Switch between English & Hindi\n📸 Product Gallery - View products with images\n📥 Export Chat - Download conversation\n\nHow can I help you today?`,
             timestamp: new Date()
         };
         
@@ -700,31 +700,31 @@ class AngelOrganicsChatbot {
             {
                 name: 'Fresh A2 Milk',
                 price: '₹75/liter',
-                image: '../assets/images/11.jpg',
+                image: 'assets/images/11.jpg',
                 description: 'Pure Gir cow milk delivered within 6 hours'
             },
             {
                 name: 'Golden A2 Ghee',
                 price: '₹2500/kg · ₹1300/500g',
-                image: '../assets/images/12.jpg',
+                image: 'assets/images/12.jpg',
                 description: 'Traditional bilona method ghee'
             },
             {
                 name: 'Fresh Butter',
                 price: '₹1200/kg',
-                image: '../assets/images/35.jpeg',
+                image: 'assets/images/35.jpeg',
                 description: 'Hand-churned, no preservatives'
             },
             {
                 name: 'Probiotic Buttermilk',
                 price: '₹30/liter',
-                image: '../assets/images/36.avif',
+                image: 'assets/images/36.avif',
                 description: 'Aids digestion naturally'
             },
             {
                 name: 'Thick Curd',
                 price: '₹100/kg',
-                image: '../assets/images/37.webp',
+                image: 'assets/images/37.webp',
                 description: 'Live cultures, protein-rich'
             }
         ];
@@ -798,6 +798,7 @@ class AngelOrganicsChatbot {
                 timestamp: new Date(),
                 actionData: responseData.action || null  // Action data comes from backend
             });
+            this.runAgentAction(responseData.action);
             
         } catch (error) {
             console.error('Error sending message:', error);
@@ -824,7 +825,8 @@ class AngelOrganicsChatbot {
                 body: JSON.stringify({
                     message: message,
                     session_id: this.sessionId,
-                    language: this.language
+                    language: this.language,
+                    cart: window.AngelSite ? window.AngelSite.getCart() : []
                 })
             }).finally(() => clearTimeout(timer));
             
@@ -923,7 +925,7 @@ class AngelOrganicsChatbot {
         const messageHTML = `
             <div class="message ${message.type}">
                 <div class="message-avatar">
-                    ${message.type === 'bot' ? '<img src="../assets/images/chatbot-avatar.jpg" alt="Angel Organics cow" class="avatar-img">' : '👤'}
+                    ${message.type === 'bot' ? '<img src="assets/images/chatbot-avatar.jpg" alt="Angel Organics cow" class="avatar-img">' : '👤'}
                 </div>
                 <div class="message-content">
                     ${message.isHTML ? message.text : this.formatMessage(message.text)}
@@ -944,7 +946,17 @@ class AngelOrganicsChatbot {
     }
     
     formatMessage(text) {
-        // Convert markdown-style formatting to HTML
+        // Full Markdown via the open-source marked + DOMPurify libraries when loaded
+        if (window.marked && window.DOMPurify) {
+            try {
+                const html = window.marked.parse(String(text || ''), { breaks: true, gfm: true });
+                return window.DOMPurify.sanitize(html, { ADD_ATTR: ['target', 'rel'] })
+                    .replace(/<a /g, '<a target="_blank" rel="noopener" ');
+            } catch (err) {
+                console.warn('Markdown render failed, using plain formatting', err);
+            }
+        }
+        // Fallback: escaped text with **bold**, links and line breaks
         return this.escapeHtml(text || '')
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
@@ -982,7 +994,7 @@ class AngelOrganicsChatbot {
         
         const typingHTML = `
             <div class="message bot typing-message">
-                <div class="message-avatar"><img src="../assets/images/chatbot-avatar.jpg" alt="Angel Organics cow" class="avatar-img"></div>
+                <div class="message-avatar"><img src="assets/images/chatbot-avatar.jpg" alt="Angel Organics cow" class="avatar-img"></div>
                 <div class="typing-indicator">
                     <div class="typing-dot"></div>
                     <div class="typing-dot"></div>
@@ -1045,6 +1057,32 @@ class AngelOrganicsChatbot {
         } catch (e) {
             console.debug('No agentic actions in response', e);
         }
+    }
+    
+    // Carry out what the AI agent decided to do on the website
+    runAgentAction(action) {
+        if (!action || !window.AngelSite) return;
+        const site = window.AngelSite;
+        if (action.action === 'add_to_cart' && Array.isArray(action.items)) {
+            const done = action.items.filter(i => site.addToCart(i.id, Number(i.quantity)));
+            if (done.length) {
+                const names = done.map(i => `${i.quantity} × ${site.products[i.id].name}${i.id === 'ghee500' ? ' (500g)' : ''}`);
+                this.addAgentNote(`🛒 Added to your bill: ${names.join(', ')}`);
+            }
+        } else if (action.action === 'send_bill') {
+            if (site.sendBillOnWhatsApp()) this.addAgentNote('💬 Opened WhatsApp with your bill');
+        } else if (action.action === 'navigate' && action.section) {
+            if (site.goTo(action.section)) this.addAgentNote('👀 Showing it on the page');
+        }
+    }
+    
+    addAgentNote(text) {
+        const messagesContainer = document.getElementById('chatbotMessages');
+        const note = document.createElement('div');
+        note.className = 'agent-note';
+        note.textContent = text;
+        messagesContainer.appendChild(note);
+        this.scrollToBottom();
     }
     
     createActionButtons(buttons) {
@@ -1114,6 +1152,14 @@ class AngelOrganicsChatbot {
                 }
                 break;
             }
+            
+            case 'send_bill':
+                if (window.AngelSite) window.AngelSite.sendBillOnWhatsApp();
+                break;
+            
+            case 'navigate':
+                if (window.AngelSite && query) window.AngelSite.goTo(query);
+                break;
             
             case 'show_contact': {
                 const contact = document.getElementById('contact');

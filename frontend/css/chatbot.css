@@ -616,3 +616,30 @@
     border-radius: 50%;
     display: block;
 }
+
+/* Agent actions performed on the website */
+.agent-note {
+    align-self: center;
+    margin: 4px auto 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #fff8e8;
+    border: 1px solid #f6c453;
+    color: #6b4a07;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    max-width: 90%;
+    width: fit-content;
+}
+
+/* Markdown inside bot replies */
+.message-content p { margin: 0 0 8px; }
+.message-content p:last-of-type { margin-bottom: 0; }
+.message-content ul, .message-content ol { margin: 6px 0 8px; padding-left: 20px; }
+.message-content li { margin: 2px 0; }
+.message-content a { color: #1f7a3a; text-decoration: underline; word-break: break-word; }
+.message-content h1, .message-content h2, .message-content h3, .message-content h4 { font-size: 15px; margin: 8px 0 4px; }
+.message-content table { border-collapse: collapse; font-size: 13px; margin: 6px 0; }
+.message-content th, .message-content td { border: 1px solid #e0e0e0; padding: 4px 8px; }
+.message-content code { background: #f1f1f1; padding: 1px 4px; border-radius: 4px; }

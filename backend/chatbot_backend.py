@@ -23,7 +23,7 @@ from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.memory import MemorySaver
 from typing import TypedDict, Annotated, Sequence
 import operator
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import logging
 import uuid
 import json
@@ -100,6 +100,7 @@ if not GROQ_API_KEY:
 PREFERRED_MODELS = [
     "openai/gpt-oss-20b",
     "openai/gpt-oss-120b",
+    "qwen/qwen3.8-27b",
     "meta-llama/llama-4-scout-17b-16e-instruct",
     "qwen/qwen3-32b",
     "llama-3.3-70b-versatile",
@@ -378,6 +379,124 @@ def show_all_products() -> str:
         ]
     }, indent=2)
 
+# ==================== WEBSITE ACTION TOOLS ====================
+# These tools let the agent act on the website itself. Their results carry an
+# "action" that the chatbot in the browser carries out (add items to the bill,
+# open WhatsApp with the bill, scroll to a section).
+
+CART_PRODUCTS = {
+    "milk": "Fresh Gir Cow A2 Milk (₹75 per liter)",
+    "ghee": "Golden A2 Ghee 1 kg (₹2500 per kg)",
+    "ghee500": "Golden A2 Ghee 500g (₹1300 per 500g)",
+    "butter": "Fresh Butter (₹1200 per kg)",
+    "buttermilk": "Probiotic Buttermilk (₹30 per liter)",
+    "curd": "Thick Curd (₹100 per kg)",
+}
+
+@tool
+def add_to_bill(items: str) -> str:
+    """Add products to the customer's bill on the website. Use when the customer asks to add, buy or order specific quantities.
+    Format: 'milk:2,ghee500:1'. Product ids: milk (liters), ghee (kg), ghee500 (500g packs), butter (kg), buttermilk (liters), curd (kg)."""
+    added, unknown = [], []
+    for part in items.split(","):
+        if not part.strip():
+            continue
+        if ":" in part:
+            pid, qty = part.split(":", 1)
+        else:
+            pid, qty = part, "1"
+        pid = "".join(pid.lower().split())
+        try:
+            quantity = float(qty)
+        except ValueError:
+            quantity = 0
+        if pid in CART_PRODUCTS and quantity > 0:
+            added.append({"id": pid, "quantity": quantity})
+        else:
+            unknown.append(part.strip())
+    if not added:
+        return json.dumps({
+            "action": "not_found",
+            "message": "No valid items. Product ids: " + ", ".join(CART_PRODUCTS),
+            "buttons": [{"text": "📋 All Products", "action": "show_all_products"}]
+        })
+    summary = ", ".join(f"{i['quantity']:g} x {CART_PRODUCTS[i['id']]}" for i in added)
+    return json.dumps({
+        "action": "add_to_cart",
+        "items": added,
+        "message": f"Added to bill: {summary}" + (f". Not recognised: {', '.join(unknown)}" if unknown else ""),
+        "buttons": [
+            {"text": "🧾 View My Bill", "action": "calculate"},
+            {"text": "💬 Send Bill on WhatsApp", "action": "send_bill"}
+        ]
+    })
+
+@tool
+def send_bill_on_whatsapp() -> str:
+    """Open WhatsApp with the customer's current bill from the website's Bill Calculator. Use when the customer wants to confirm, send or place the order for items already in their bill."""
+    return json.dumps({
+        "action": "send_bill",
+        "message": "Opening WhatsApp with your bill.",
+        "buttons": [
+            {"text": "💬 Send Bill on WhatsApp", "action": "send_bill"},
+            {"text": "🧾 View My Bill", "action": "calculate"}
+        ]
+    })
+
+WEBSITE_SECTIONS = {
+    "home": "home", "about": "about", "products": "products", "calculator": "calculator",
+    "bill": "calculator", "reviews": "testimonials", "testimonials": "testimonials",
+    "gallery": "gallery", "photos": "gallery", "order": "order", "contact": "contact",
+    "map": "location", "location": "location",
+}
+
+@tool
+def open_website_section(section: str) -> str:
+    """Scroll the website to a section for the customer. Sections: home, about, products, calculator, reviews, gallery, order, contact, location."""
+    target = WEBSITE_SECTIONS.get(section.lower().strip())
+    if not target:
+        return json.dumps({"action": "not_found", "message": "Sections: " + ", ".join(sorted(set(WEBSITE_SECTIONS))), "buttons": []})
+    return json.dumps({
+        "action": "navigate",
+        "section": target,
+        "message": f"Showing the {section} section.",
+        "buttons": []
+    })
+
+@tool
+def check_farm_open_now() -> str:
+    """Check whether the farm is open right now (working hours: daily 6:00 AM - 8:00 PM, India time)."""
+    now = datetime.now(timezone(timedelta(hours=5, minutes=30)))
+    is_open = 6 <= now.hour < 20
+    return json.dumps({
+        "open_now": is_open,
+        "current_time_india": now.strftime("%I:%M %p, %A"),
+        "working_hours": "Daily: 6:00 AM - 8:00 PM",
+        "status": "Open now, until 8:00 PM" if is_open else "Closed now, opens at 6:00 AM"
+    })
+
+CUSTOMER_REVIEWS = [
+    {"name": "Alok Uttam", "about": "Full time Trader, Bishnu Hill Town, Ajmer",
+     "review": "ANGEL ORGANICS delivers outstanding Gir cow milk, and their focus on hygiene is commendable. The cows are housed in a clean, well-maintained shelter with plenty of space and fresh air, which clearly contributes to their health and the milk's quality. The milking process is highly hygienic, with strict protocols to ensure the milk remains uncontaminated. The result is pure, creamy milk that tastes amazing and feels safe to consume. I highly recommend this farm for anyone seeking hygienic and authentic Gir cow milk!"},
+    {"name": "Priya Kulshrestha", "about": "Mayo College, Ajmer",
+     "review": "I've been buying A2 milk and ghee from Angel Organics for the past 4 months – the quality and purity are consistently excellent. Truly worth it for the reasonable rates in Ajmer!"},
+    {"name": "Rajesh Kumar", "about": "Fitness Trainer, Ajmer",
+     "review": "As a fitness trainer, I recommend Angel Organics A2 milk to all my clients. The protein quality is exceptional and the natural taste is unmatched. It's the gold standard of dairy!"},
+    {"name": "Meera Gupta", "about": "Home Chef, Ajmer",
+     "review": "The A2 ghee from Angel Organics is pure liquid gold! It has transformed our cooking and my family's health. You can taste the love and purity in every spoonful."},
+    {"name": "Surasri Majumder", "about": "Mayo College Girls School, Ajmer",
+     "review": "My daughter was just 9 months old when I started giving her Gir Cow milk from Angel Organics, and to my surprise, not once did she face any issue with digestion. The quality is truly pure and authentic. I am deeply impressed with their motto of spreading purity with love, and they are living up to it every single day. Best wishes to Angel Organics — you can blindly trust their quality, and I can personally vouch for it."},
+]
+
+@tool
+def get_customer_reviews() -> str:
+    """Get the real customer reviews shown on the website. Use for any question about reviews, testimonials or what customers say. Quote them accurately; never invent reviews."""
+    return json.dumps({
+        "action": "show_reviews",
+        "reviews": CUSTOMER_REVIEWS,
+        "buttons": [{"text": "⭐ Read Reviews on Website", "action": "navigate", "query": "testimonials"}]
+    })
+
 # List of all tools
 tools = [
     get_product_info,
@@ -386,7 +505,12 @@ tools = [
     get_health_benefits,
     create_whatsapp_order,
     show_gallery,
-    show_all_products
+    show_all_products,
+    add_to_bill,
+    send_bill_on_whatsapp,
+    open_website_section,
+    check_farm_open_now,
+    get_customer_reviews
 ]
 
 # Bind tools to LLM
@@ -431,16 +555,25 @@ You are a knowledgeable AI assistant who can answer ANY question about:
 - create_whatsapp_order: Order placement
 - show_gallery: Farm photos
 - show_all_products: Complete product list
+- add_to_bill: Add items to the customer's bill on this website (e.g. "add 2 liters milk")
+- send_bill_on_whatsapp: Open WhatsApp with the customer's bill to place the order
+- open_website_section: Scroll the website to a section (products, gallery, calculator, reviews, contact, location)
+- check_farm_open_now: Whether the farm is open right now
+- get_customer_reviews: The real customer reviews from the website
+
+**ACTING ON THE WEBSITE (agentic):**
+- When the customer asks to add/buy specific quantities, call add_to_bill, then confirm what was added and the price.
+- When they want to place/confirm/send the order, call send_bill_on_whatsapp.
+- When they ask to see photos, reviews, the map or the calculator, call open_website_section.
 
 **INTELLIGENT RESPONSE STRATEGY:**
 1. **For tool-related queries**: Use appropriate tool + give brief explanation
    - "show pictures/gallery" → use show_gallery tool
    - "location/map/directions" → use get_farm_location tool
-   - "reviews/testimonials" → Just answer conversationally (NO tool needed)
+   - "reviews/testimonials" → use get_customer_reviews and quote them accurately
    - "prices" → use get_product_info or show_all_products tool
    
 2. **For general questions**: Answer directly without tools
-   - Reviews: Share customer feedback conversationally
    - Farm info: Explain our practices and values
    - Health questions: Provide detailed A2 milk benefits
    - Comparisons: Explain A2 vs A1 milk differences
@@ -450,7 +583,8 @@ You are a knowledgeable AI assistant who can answer ANY question about:
 **RESPONSE STYLE:**
 - Be friendly, helpful, and knowledgeable
 - Answer questions directly and completely
-- Don't say "I can't help" - always provide useful information
+- Only state facts given in this prompt or returned by tools. Never invent prices, products, discounts, delivery areas, delivery times, order statuses or reviews.
+- If you don't know something (e.g. delivery to a specific area), say so and suggest WhatsApp/call: +91 8811013758
 - Keep responses natural and conversational
 - When using tools, keep your text response brief (1-2 sentences)
 - When NOT using tools, give comprehensive, detailed answers
@@ -458,13 +592,13 @@ You are a knowledgeable AI assistant who can answer ANY question about:
 **CRITICAL RULES:**
 - NEVER repeat or mention the JSON tool output in your response
 - Use tools strategically - not for everything
-- For reviews/testimonials, answer conversationally without tools
+- For reviews/testimonials, use get_customer_reviews
 - Always be helpful and informative
-- If unsure, provide relevant information and suggest contacting us
+- If unsure, say so honestly and suggest contacting us
 
 **EXAMPLE RESPONSES:**
-User: "show reviews" 
-Response: "Our customers love us! We have amazing testimonials from satisfied families across Ajmer. Alok Uttam praises our hygiene practices, Priya Kulshrestha appreciates our consistent quality, and Surasri Majumder trusts us with her baby's nutrition. Would you like to know more about specific customer experiences?"
+User: "add 2 liters of milk and a 500g ghee to my bill"
+Response: [use add_to_bill with "milk:2,ghee500:1"] "Done! I've added 2 liters of Fresh Gir Cow A2 Milk (₹150) and Golden A2 Ghee 500g (₹1300) to your bill. Want me to send it on WhatsApp?"
 
 User: "show pictures"
 Response: "Here's our farm gallery!" [use show_gallery tool]
@@ -477,6 +611,13 @@ Response: "Great question! A2 milk contains only A2 beta-casein protein, while r
 
 """
     
+    cart = state.get("context", {}).get("cart") or []
+    if cart:
+        lines = [f"- {i.get('quantity')} x {CART_PRODUCTS.get(i.get('id'), i.get('id'))}" for i in cart]
+        system_prompt += "\n**CUSTOMER'S CURRENT BILL ON THE WEBSITE:**\n" + "\n".join(lines) + "\n"
+    else:
+        system_prompt += "\n**CUSTOMER'S CURRENT BILL ON THE WEBSITE:** empty\n"
+
     if state.get("context", {}).get("language") == "hi":
         system_prompt += "\n**LANGUAGE:** The customer chose Hindi. Reply in simple Hindi (Devanagari script). Keep prices, phone numbers and product names as they are.\n"
 
@@ -617,6 +758,11 @@ def chat():
         # Get conversation history
         conversation = get_or_create_conversation(session_id)
         conversation.setdefault("context", {})["language"] = language
+        cart = data.get('cart') if isinstance(data.get('cart'), list) else []
+        conversation["context"]["cart"] = [
+            {"id": str(i.get("id")), "quantity": float(i.get("quantity", 0))}
+            for i in cart[:20] if isinstance(i, dict) and str(i.get("id")) in CART_PRODUCTS
+        ]
         
         # Prepare state
         state = {
