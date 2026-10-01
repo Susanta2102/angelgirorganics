@@ -484,7 +484,7 @@ class AngelOrganicsChatbot {
                     <div class="chatbot-header">
                         <div class="chatbot-header-info">
                             <div class="chatbot-avatar">
-                                🐄
+                                <img src="../assets/images/chatbot-avatar.jpg" alt="Angel Organics cow" class="avatar-img">
                             </div>
                             <div class="chatbot-title">
                                 <h3>Angel Organics AI</h3>
@@ -924,7 +924,7 @@ class AngelOrganicsChatbot {
         const messageHTML = `
             <div class="message ${message.type}">
                 <div class="message-avatar">
-                    ${message.type === 'bot' ? '🤖' : '👤'}
+                    ${message.type === 'bot' ? '<img src="../assets/images/chatbot-avatar.jpg" alt="Angel Organics cow" class="avatar-img">' : '👤'}
                 </div>
                 <div class="message-content">
                     ${message.isHTML ? message.text : this.formatMessage(message.text)}
@@ -989,7 +989,7 @@ class AngelOrganicsChatbot {
         
         const typingHTML = `
             <div class="message bot typing-message">
-                <div class="message-avatar">🤖</div>
+                <div class="message-avatar"><img src="../assets/images/chatbot-avatar.jpg" alt="Angel Organics cow" class="avatar-img"></div>
                 <div class="typing-indicator">
                     <div class="typing-dot"></div>
                     <div class="typing-dot"></div>
