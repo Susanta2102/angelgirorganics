@@ -28,6 +28,7 @@ import logging
 import uuid
 import json
 import time
+import requests
 from functools import wraps
 
 # Load environment variables
@@ -92,9 +93,41 @@ GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 if not GROQ_API_KEY:
     raise ValueError("❌ GROQ_API_KEY not found! Please add it to your .env file")
 
-# Groq retires models over time; override with GROQ_MODEL (e.g. in Render env vars)
-# instead of editing code. Pick a tool-calling model from https://console.groq.com/docs/models
-GROQ_MODEL = os.getenv('GROQ_MODEL', 'llama-3.1-8b-instant')
+# Open-weight models with tool calling, in order of preference.
+# Groq retires models over time, so at startup we pick the first one this
+# API key can actually use. Set GROQ_MODEL (e.g. in Render env vars) to force one.
+PREFERRED_MODELS = [
+    "openai/gpt-oss-20b",
+    "openai/gpt-oss-120b",
+    "meta-llama/llama-4-scout-17b-16e-instruct",
+    "qwen/qwen3-32b",
+    "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant",
+]
+
+def select_groq_model():
+    """Return GROQ_MODEL if set, else the first preferred model Groq still serves."""
+    forced = os.getenv('GROQ_MODEL')
+    if forced:
+        return forced
+    try:
+        resp = requests.get(
+            "https://api.groq.com/openai/v1/models",
+            headers={"Authorization": f"Bearer {GROQ_API_KEY}"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        available = {m["id"] for m in resp.json().get("data", [])}
+        logger.info(f"Groq models available: {sorted(available)}")
+        for model in PREFERRED_MODELS:
+            if model in available:
+                return model
+        logger.warning("None of the preferred models are available on Groq")
+    except Exception as e:
+        logger.warning(f"Could not list Groq models ({e}); using default")
+    return PREFERRED_MODELS[0]
+
+GROQ_MODEL = select_groq_model()
 logger.info(f"Using Groq model: {GROQ_MODEL}")
 
 # Initialize Groq LLM with LangGraph-compatible settings
